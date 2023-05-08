@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateUserEventDialog from '../Components/CreateUserEventDialog';
+import { Edit, Delete } from '@mui/icons-material/';
 
 const data = [
     { UserId: 1, EventId: 1},
@@ -28,6 +29,10 @@ function UserEventsPage(){
         setOpen(false);
     };
 
+    function handleDelete(event){
+
+    };
+
     return(
         <>
             <h2>User Events</h2>
@@ -42,6 +47,8 @@ function UserEventsPage(){
                         <TableRow>
                             <TableCell>User ID</TableCell>
                             <TableCell>Event ID</TableCell>
+                            <TableCell>Edit</TableCell>
+                            <TableCell>Delete</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -51,6 +58,8 @@ function UserEventsPage(){
                             >
                                 <TableCell>{row.UserId}</TableCell>
                                 <TableCell>{row.EventId}</TableCell>
+                                <TableCell><Button onClick={handleClickOpen} startIcon={<Edit />}></Button></TableCell>
+                                <TableCell><Button onClick={handleDelete(row)} startIcon={<Delete color='error' />}></Button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
