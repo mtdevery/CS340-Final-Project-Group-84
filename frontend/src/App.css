@@ -1,0 +1,27 @@
+.App {
+  margin: 0px;
+  padding: 0px;
+}
+
+.App-Header{
+  margin: 0;
+  z-index: 1201;
+}
+
+.Sidebar{
+  height: calc(100vh - 64px);
+  display: flex;
+}
+
+.Content{
+  margin-left: 20px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
