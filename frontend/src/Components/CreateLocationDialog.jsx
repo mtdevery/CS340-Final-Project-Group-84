@@ -24,7 +24,6 @@ export default function CreateLocationDialog ({open, handleClose}) {
             variant="standard"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="description"
             label="City"
@@ -33,7 +32,6 @@ export default function CreateLocationDialog ({open, handleClose}) {
             variant="standard"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="description"
             label="Postal Code"
@@ -43,7 +41,6 @@ export default function CreateLocationDialog ({open, handleClose}) {
             variant="standard"
           />
           <TextField
-            autoFocus
             margin="dense"
             id="description"
             label="Country"
