@@ -9,7 +9,7 @@ import { Button, FormControl, InputLabel, Select, MenuItem, } from '@mui/materia
 export default function CreateEventCategoryDialog ({open, handleClose}) {
     return(
         <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New Category</DialogTitle>
+        <DialogTitle>Add a Category to an Event</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To create a new category please fill out all the fields below.

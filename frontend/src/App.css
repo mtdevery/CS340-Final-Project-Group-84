@@ -14,7 +14,8 @@
 }
 
 .Content{
-  margin-left: 20px;
+  margin-left: 1rem;
+  max-width: 1000px;
 }
 
 @keyframes App-logo-spin {

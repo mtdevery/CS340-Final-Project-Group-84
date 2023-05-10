@@ -9,7 +9,7 @@ import { Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material
 export default function CreateUserEventDialog ({open, handleClose}) {
     return(
         <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New Category</DialogTitle>
+        <DialogTitle>Subscribe User to an Event</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To create a new category please fill out all the fields below.

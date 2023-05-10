@@ -9,7 +9,7 @@ import { TextField, Button } from '@mui/material';
 export default function CreateUserDialog ({open, handleClose}) {
     return(
         <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New Category</DialogTitle>
+        <DialogTitle>Create New User</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To create a new category please fill out all the fields below.

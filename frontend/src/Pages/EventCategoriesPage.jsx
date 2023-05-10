@@ -29,13 +29,16 @@ function EventCategoriesPage(){
     return(
         <>
             <h2>Event Categories</h2>
-
+            <p>
+                This page displays the intersection table used to manage the M:N relationship between events and categories.
+                Use the button below to add a new category to an event.
+            </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new event category
             </Button>
             <CreateEventCategoryDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
+                <Table sx={{ minWidth: 650 }} aria-label="EventCategories Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Event ID</TableCell>

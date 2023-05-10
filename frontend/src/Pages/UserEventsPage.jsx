@@ -36,13 +36,17 @@ function UserEventsPage(){
     return(
         <>
             <h2>User Events</h2>
-
+            <p>
+                This page displays the intersection table used to manage the M:N relationship between users and events.
+                This allows users to mark themselves as going to an event and receive updates, etc.
+                Use the button below to add a new category to an event.
+            </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new user event
             </Button>
             <CreateUserEventDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
+                <Table sx={{ minWidth: 650 }} aria-label="UserEvents Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>User ID</TableCell>

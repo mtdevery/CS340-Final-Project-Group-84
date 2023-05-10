@@ -31,13 +31,17 @@ function UsersPage(){
     return(
         <>
             <h2>Users</h2>
-
+            <p>
+                This page displays the information about the users of our website. This table has a N:M
+                relationship with events.
+                Use the button below to add a new user.
+            </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new user
             </Button>
             <CreateUserDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
+                <Table sx={{ minWidth: 650 }} aria-label="Users Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>

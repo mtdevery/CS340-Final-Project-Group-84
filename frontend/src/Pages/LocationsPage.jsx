@@ -30,13 +30,17 @@ function LocationsPage(){
     return(
         <>
             <h2>Locations</h2>
-
+            <p>
+                This page displays the information about the locations that events are hosted at. This table has a 1:M
+                relationship with events since more than one event may be hosted at the same location.
+                Use the button below to add a new location.
+            </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new location
             </Button>
             <CreateLocationDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
+                <Table sx={{ minWidth: 650 }} aria-label="Locations Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>

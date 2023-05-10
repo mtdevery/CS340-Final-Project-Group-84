@@ -36,13 +36,16 @@ function EventsPage(){
     return(
         <>
             <h2>Events</h2>
-
+            <p>
+                This page would be the main display for our website. It displays all the upcoming events and allows for editing and deleting.
+                Use the button below to create a new event.
+            </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new event
             </Button>
             <CreateEventDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
+                <Table sx={{ minWidth: 650 }} aria-label="Events Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>

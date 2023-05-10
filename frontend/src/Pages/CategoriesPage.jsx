@@ -36,8 +36,6 @@ function CategoriesPage(){
             <p>
                 This page displays the various categories that our events can fall into. One event can have many associated categories to help users find events they
                 are interested in.
-            </p>
-            <p>
                 Use the button below to insert a new category into the collection.
             </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
