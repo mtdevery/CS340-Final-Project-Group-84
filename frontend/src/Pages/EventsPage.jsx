@@ -8,6 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl/FormControl';
+import { InputLabel, Select, MenuItem } from '@mui/material';
 import CreateEventDialog from '../Components/CreateEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
@@ -39,11 +41,30 @@ function EventsPage(){
             <h2>Events</h2>
             <p>
                 This page would be the main display for our website. It displays all the upcoming events and allows for editing and deleting.
-                Use the button below to create a new event.
+                Use the button below to create a new event. On this page you can also use the dropdown on the right of the table to filter 
+                the view to a single location.
             </p>
-            <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
-                Add a new event
-            </Button>
+            <span style={{display:"flex", justifyContent:"space-between"}}>
+                <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
+                    Add a new event
+                </Button>
+                <FormControl 
+                    margin="dense"
+                    sx={{width:"200px"}}
+                    >
+                    <InputLabel>Location</InputLabel>
+                    <Select
+                    margin="dense"
+                    variant="outlined"
+                    label="Location"
+                    >
+                        <MenuItem value={'Eugene'}>Eugene</MenuItem>
+                        <MenuItem value={'Springfield'}>Springfield</MenuItem>
+                        <MenuItem value={'Corvallis'}>Corvallis</MenuItem>
+                        <MenuItem value={'San Ramon'}>San Ramon</MenuItem>
+                    </Select>
+                </FormControl>
+            </span>
             <CreateEventDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="Events Table">
