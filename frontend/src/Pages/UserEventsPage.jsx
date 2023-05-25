@@ -11,14 +11,6 @@ import CreateUserEventDialog from '../Components/CreateUserEventDialog';
 import EditUserEventDialog from '../Components/EditUserEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
-const data = [
-    { UserId: 1, EventId: 1},
-    { UserId: 1, EventId: 5},
-    { UserId: 3, EventId: 1},
-    { UserId: 4, EventId: 3},
-    { UserId: 2, EventId: 3}
-];
-
 function UserEventsPage(){
     const [open, setOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
