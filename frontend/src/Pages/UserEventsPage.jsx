@@ -31,6 +31,7 @@ function UserEventsPage(){
 
     const handleCreateClose = () => {
         setOpen(false);
+        loadAllUserEvents();
     };
 
     const handleEditClickOpen = (userEvent) => {
@@ -40,16 +41,17 @@ function UserEventsPage(){
 
     const handleEditClose = () => {
         setEditOpen(false);
+        loadAllUserEvents();
     };
 
     const loadAllUserEvents = async () => {
-        const response = await fetch('/api/userevents').catch(setUserEvents(data));
+        const response = await fetch('/api/userevents');
         const userEvents = await response.json();
         setUserEvents(userEvents);
     };
 
     const handleDelete = async (userEvent) => {
-        const response = await fetch(`api/userevents/?userid=${userEvent.UserId}&eventid=${userEvent.EventId}`, { 
+        const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, { 
             method: 'DELETE' 
         });
         if (response.status === 204) {
