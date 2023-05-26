@@ -7,22 +7,21 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 export default function CreateUserEventDialog (props) {
-    const {open, onClose} = props;
-
+    const {open, onClose, userEvent} = props;
     const [userId, setUserId] = React.useState('');
     const [eventId, setEventId] = React.useState('');
 
-    const createEvent = async () => {
+    const editUserEvent = async () => {
       const newUserEvent = { UserId: userId, EventId: eventId };
-      const response = await fetch('api/userevents', {
-          method: 'POST',
+      const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, {
+          method: 'PUT',
           body: JSON.stringify(newUserEvent),
           headers: {
               'Content-Type': 'application/json',
           }
       });
       if (response.status === 201){
-          alert('Successfully added event');
+          alert('Successfully updated user event');
           handleClose();
       } else {
           alert(`User Event not added. Please check that all required fields are entered. Status code = ${response.status}`);
@@ -32,6 +31,13 @@ export default function CreateUserEventDialog (props) {
     const handleClose = () => {
       onClose();
     };
+
+    React.useEffect(() => {
+      if(userEvent !== undefined){
+        setUserId(userEvent.UserId);
+        setEventId(userEvent.EventId);
+      }
+    },[userEvent]);
 
     return(
         <Dialog open={open} onClose={handleClose}>
@@ -83,7 +89,7 @@ export default function CreateUserEventDialog (props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={createEvent}>Submit</Button>
+          <Button onClick={editUserEvent}>Submit</Button>
         </DialogActions>
       </Dialog>
     );

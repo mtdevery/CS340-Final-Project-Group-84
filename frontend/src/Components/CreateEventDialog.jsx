@@ -39,7 +39,7 @@ export default function CreateEventDialog ({open, handleClose}) {
             id="cost"
             type="number"
             />
-            <br />
+          <br />
           <FormControl 
             fullWidth
             margin="dense"
