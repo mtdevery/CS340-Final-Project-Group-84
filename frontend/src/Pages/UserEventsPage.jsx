@@ -11,14 +11,6 @@ import CreateUserEventDialog from '../Components/CreateUserEventDialog';
 import EditUserEventDialog from '../Components/EditUserEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
-const data = [
-    { UserId: 1, EventId: 1},
-    { UserId: 1, EventId: 5},
-    { UserId: 3, EventId: 1},
-    { UserId: 4, EventId: 3},
-    { UserId: 2, EventId: 3}
-];
-
 function UserEventsPage(){
     const [open, setOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
@@ -31,6 +23,7 @@ function UserEventsPage(){
 
     const handleCreateClose = () => {
         setOpen(false);
+        loadAllUserEvents();
     };
 
     const handleEditClickOpen = (userEvent) => {
@@ -40,16 +33,17 @@ function UserEventsPage(){
 
     const handleEditClose = () => {
         setEditOpen(false);
+        loadAllUserEvents();
     };
 
     const loadAllUserEvents = async () => {
-        const response = await fetch('/api/userevents').catch(setUserEvents(data));
+        const response = await fetch('/api/userevents');
         const userEvents = await response.json();
         setUserEvents(userEvents);
     };
 
     const handleDelete = async (userEvent) => {
-        const response = await fetch(`api/userevents/?userid=${userEvent.UserId}&eventid=${userEvent.EventId}`, { 
+        const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, { 
             method: 'DELETE' 
         });
         if (response.status === 204) {

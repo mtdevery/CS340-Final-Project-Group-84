@@ -13,7 +13,7 @@ export default function CreateUserEventDialog (props) {
 
     const editUserEvent = async () => {
       const newUserEvent = { UserId: userId, EventId: eventId };
-      const response = await fetch(`api/userevents/?userid=${newUserEvent.UserId}&eventid=${newUserEvent.EventId}`, {
+      const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, {
           method: 'PUT',
           body: JSON.stringify(newUserEvent),
           headers: {
@@ -21,7 +21,7 @@ export default function CreateUserEventDialog (props) {
           }
       });
       if (response.status === 201){
-          alert('Successfully added event');
+          alert('Successfully updated user event');
           handleClose();
       } else {
           alert(`User Event not added. Please check that all required fields are entered. Status code = ${response.status}`);
