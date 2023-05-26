@@ -13,6 +13,7 @@ import { InputLabel, Select, MenuItem } from '@mui/material';
 import CreateEventDialog from '../Components/CreateEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
+/*
 const data = [
     { EventId: 1, Time: '08/18/2023 1:00 AM', Description: 'Bridal Party for Abbie', Cost: 17.93, LocationId: 1},
     { EventId: 2, Time: '06/22/2023 4:58 PM', Description: 'Rolling Stones Concert', Cost: 37.97, LocationId: 2},
@@ -20,8 +21,17 @@ const data = [
     { EventId: 4, Time: '02/06/2023 6:06 AM', Description: 'Live Band Karaoke', Cost: 39.73, LocationId: 2},
     { EventId: 5, Time: '11/08/2023 8:00 AM', Description: 'Abbie\'s Wedding', Cost: 2.60, LocationId: 1}
 ];
+*/
 
 function EventsPage(){
+    const [data,setData] = useState([]); 
+    const loadData = async() => {
+        const response = await(fetch("/events"));
+        const data = await response.json();
+        setData(data);
+    }
+    useEffect(()=> {loadData();}, [] );
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -32,8 +42,11 @@ function EventsPage(){
         setOpen(false);
     };
 
-    function handleDelete(event){
-
+    const handleDelete = async (id) => {
+        const response = await fetch(`/events/${id}`,{method: "DELETE" }) // currently nothing but status is returned
+        if (response.status === 204) {console.log('successful delete on backend');}
+        else{console.log('failed to make deletion');}
+        loadData();
     };
 
     return(
@@ -65,7 +78,7 @@ function EventsPage(){
                     </Select>
                 </FormControl>
             </span>
-            <CreateEventDialog open={open} handleClose={handleClose} />
+            <CreateEventDialog open={open} handleClose={handleClose} data ={data} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="Events Table">
                     <TableHead>
@@ -85,12 +98,12 @@ function EventsPage(){
                                 key={row.EventId}
                             >
                                 <TableCell>{row.EventId}</TableCell>
-                                <TableCell>{row.Time}</TableCell>
+                                <TableCell>{moment(row.Time).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                                 <TableCell>{row.Description}</TableCell>
                                 <TableCell>{row.Cost}</TableCell>
                                 <TableCell>{row.LocationId}</TableCell>
                                 <TableCell><Button onClick={handleClickOpen} startIcon={<Edit />}></Button></TableCell>
-                                <TableCell><Button onClick={handleDelete(row)} startIcon={<Delete color='error' />}></Button></TableCell>
+                                <TableCell><Button onClick={()=> handleDelete(row.EventId)} startIcon={<Delete color='error' />}></Button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
