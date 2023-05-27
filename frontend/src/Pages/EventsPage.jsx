@@ -25,10 +25,16 @@ const data = [
 
 function EventsPage(){
     const [data,setData] = useState([]); 
+    const [location_list,setLocationList] = useState([]);
+
     const loadData = async() => {
         const response = await(fetch("/events"));
         const data = await response.json();
         setData(data);
+
+        const response2 = await fetch("/locations");
+        const location_list = await response2.json();
+        setLocationList(location_list);
     }
     useEffect(()=> {loadData();}, [] );
 
@@ -72,10 +78,10 @@ function EventsPage(){
                     label="Location"
                     defaultValue= {""}
                     >
-                        <MenuItem value={'Eugene'}>Eugene</MenuItem>
-                        <MenuItem value={'Springfield'}>Springfield</MenuItem>
-                        <MenuItem value={'Corvallis'}>Corvallis</MenuItem>
-                        <MenuItem value={'San Ramon'}>San Ramon</MenuItem>
+                        {location_list.map((location_row,i) => 
+                            <MenuItem key = {i} >  
+                                {location_row.City }  
+                            </MenuItem>)}
                     </Select>
                 </FormControl>
             </span>

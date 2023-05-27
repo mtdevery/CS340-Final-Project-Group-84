@@ -118,7 +118,30 @@ app.post('/events', async (req,res)=>{
         }
     }); 
 });
+
+/******  PUT NOT FINISHED YET  
+app.put('/events',(req,res)=>{
+    const description = req.body.description;
+    const date_time = req.body.date_time ; 
+    const cost = (req.body.cost) ;
+    const location_id = req.body.location_id; 
+    const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
+    let new_query = ` UPDATE Events SET Time='${final_datetime}',Description='${description}',Cost=${cost},Location=${location_id} WHERE Event.EventId = ${req.params.id}`
+    db.query(new_query, function(err, results, fields){
+        console.log("success")
+    }); 
+});
+********************************/
 /******************** Events Controller END ********************/
+
+
+/**********************Locations Controller ***************** */
+app.get('/locations', (req,res) =>{
+    const query = "SELECT * FROM Locations ORDER BY City ASC";
+    db.query(query,(err, results) => {
+        res.json(results);
+    })
+})
 
 // Send routing back to react app
 app.use((req, res, next) => {
