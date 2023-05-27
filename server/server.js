@@ -106,7 +106,7 @@ app.post('/events', async (req,res)=>{
     const cost = (req.body.cost) ;
     const location_id = req.body.location_id; 
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
-    let new_query = ` INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}','${description}',${cost},${location_id});`
+    let new_query = ` INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
     db.pool.query(new_query, function(err, results, fields){
         if(!err){
             console.log(`Sucessful Query SQL Syntax Used: ${new_query}`);

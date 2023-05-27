@@ -70,6 +70,7 @@ function EventsPage(){
                     margin="dense"
                     variant="outlined"
                     label="Location"
+                    defaultValue= {""}
                     >
                         <MenuItem value={'Eugene'}>Eugene</MenuItem>
                         <MenuItem value={'Springfield'}>Springfield</MenuItem>

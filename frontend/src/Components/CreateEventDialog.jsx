@@ -72,6 +72,7 @@ export default function CreateEventDialog ({open, handleClose, data}) {
               margin="dense"
               variant="standard"
               label="Location"
+              defaultValue={""}
               onChange={(e)=>{setLocation(e.target.value)}}
             >
               {data.map((event_row,i) => 
