@@ -9,18 +9,9 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateCategoryDialog from '../Components/CreateCategoryDialog';
 
-const data = [
-    { CategoryId: 1, CategoryName: 'Indoor', Description: 'Events that take place within a building' },
-    { CategoryId: 2, CategoryName: 'Tournament', Description: 'Events that involve a tournament style format' },
-    { CategoryId: 3, CategoryName: 'Chess', Description: 'Events centered around the board game chess' },
-    { CategoryId: 4, CategoryName: 'Wedding', Description: 'Events centered around a wedding' },
-    { CategoryId: 5, CategoryName: 'Concert', Description: 'Events centered around musical concerts' },
-    { CategoryId: 6, CategoryName: 'Festival', Description: 'Festival style events' },
-    { CategoryId: 7, CategoryName: 'Outdoor', Description: 'Events that take place largely outdoors' }
-]
-
 function CategoriesPage(){
     const [open, setOpen] = React.useState(false);
+    const [categories, setCategories] = React.useState([]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -28,7 +19,18 @@ function CategoriesPage(){
 
     const handleClose = () => {
         setOpen(false);
+        loadAllCategories();
     };
+
+    const loadAllCategories = async () => {
+        const response = await fetch('/api/categories');
+        const categoriesData = await response.json();
+        setCategories(categoriesData);
+    };
+
+    React.useEffect(() => {
+        loadAllCategories();
+    }, []);
 
     return(
         <>
@@ -41,7 +43,7 @@ function CategoriesPage(){
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new category
             </Button>
-            <CreateCategoryDialog open={open} handleClose={handleClose} />
+            <CreateCategoryDialog open={open} onClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="Categories Table">
                     <TableHead>
@@ -52,7 +54,7 @@ function CategoriesPage(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {categories.map((row) => (
                             <TableRow
                                 key={row.CategoryId}
                             >

@@ -10,6 +10,8 @@ export default function CreateUserEventDialog (props) {
     const {open, onClose, userEvent} = props;
     const [userId, setUserId] = React.useState('');
     const [eventId, setEventId] = React.useState('');
+    const [users, setUsers] = React.useState([]);
+    const [events, setEvents] = React.useState([]);
 
     const editUserEvent = async () => {
       const newUserEvent = { UserId: userId, EventId: eventId };
@@ -28,6 +30,16 @@ export default function CreateUserEventDialog (props) {
       }
     };
 
+    const loadData = async () => {
+      const userResponse = await fetch('/api/users/');
+      const usersData = await userResponse.json();
+      setUsers(usersData);
+
+      const eventResponse = await fetch('/api/events');
+      const eventData = await eventResponse.json();
+      setEvents(eventData);
+    };
+
     const handleClose = () => {
       onClose();
     };
@@ -38,6 +50,10 @@ export default function CreateUserEventDialog (props) {
         setEventId(userEvent.EventId);
       }
     },[userEvent]);
+
+    React.useEffect(() => {
+      loadData();
+    }, []);
 
     return(
         <Dialog open={open} onClose={handleClose}>
@@ -59,11 +75,9 @@ export default function CreateUserEventDialog (props) {
               label="Location"
               onChange={e => setUserId(e.target.value)}
             >
-                <MenuItem value={1}>Abbie Cooper</MenuItem>
-                <MenuItem value={2}>Hans Dressler</MenuItem>
-                <MenuItem value={3}>Lila Blanchard</MenuItem>
-                <MenuItem value={4}>Christina Campbell</MenuItem>
-                <MenuItem value={5}>Guerete Fernandes</MenuItem>
+                {users.map((item) => (
+                  <MenuItem value={item.UserId}>{item.Name}</MenuItem>
+                ))}
             </Select>
           </FormControl>
           <FormControl 
@@ -79,11 +93,9 @@ export default function CreateUserEventDialog (props) {
               label="Location"
               onChange={e => setEventId(e.target.value)}
             >
-                <MenuItem value={1}>Bridal Party for Abbie</MenuItem>
-                <MenuItem value={2}>Rolling Stones Concert</MenuItem>
-                <MenuItem value={3}>Sunset Film Festival</MenuItem>
-                <MenuItem value={4}>Live Band Karaoke</MenuItem>
-                <MenuItem value={5}>Abbie's Wedding</MenuItem>
+                {events.map((item) => (
+                  <MenuItem value={item.EventId}>{item.Description}</MenuItem>
+                ))}
             </Select>
           </FormControl>
         </DialogContent>

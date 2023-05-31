@@ -50,7 +50,7 @@ function UserEventsPage(){
             alert('Successfully deleted the selected user event!')
             loadAllUserEvents();
         } else {
-            console.error(`Failed to delete the user event: ${userEvent}}, status code = ${response.status}`);
+            console.error(`Failed to delete the user event, status code = ${response.status}`);
         }
     };
 
@@ -64,7 +64,7 @@ function UserEventsPage(){
             <p>
                 This page displays the intersection table used to manage the M:N relationship between users and events.
                 This allows users to mark themselves as going to an event and receive updates, etc.
-                Use the button below to add a new category to an event.
+                Use the button below to add a new user to an event.
             </p>
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleCreateClickOpen}>
                 Add a new user event
@@ -76,7 +76,9 @@ function UserEventsPage(){
                     <TableHead>
                         <TableRow>
                             <TableCell>User ID</TableCell>
+                            <TableCell>User's Name</TableCell>
                             <TableCell>Event ID</TableCell>
+                            <TableCell>Event Description</TableCell>
                             <TableCell>Edit</TableCell>
                             <TableCell>Delete</TableCell>
                         </TableRow>
@@ -87,7 +89,9 @@ function UserEventsPage(){
                                 key={[row.EventId, row.UserId]}
                             >
                                 <TableCell>{row.UserId}</TableCell>
+                                <TableCell>{row.UserName}</TableCell>
                                 <TableCell>{row.EventId}</TableCell>
+                                <TableCell>{row.EventDescription}</TableCell>
                                 <TableCell><Button onClick={() => handleEditClickOpen(row)} startIcon={<Edit />}></Button></TableCell>
                                 <TableCell><Button onClick={() => handleDelete(row)} startIcon={<Delete color='error' />}></Button></TableCell>
                             </TableRow>
