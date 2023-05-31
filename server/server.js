@@ -16,13 +16,15 @@ app.use(cors())
 app.use(express.urlencoded({extended: true}))
 
 // Serve static react app
-app.use(express.static(path.join(__dirname, '../frontend/build'))); // I don't thhink we need/have static files to serve anymore
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-
-
-// UserEvents Controller
+/******************** UserEvents Controller/API ********************/
 app.get('/api/userevents', (req, res) => {
-    let query1 = 'SELECT * FROM userevents;';
+    let query1 = `SELECT UserEvents.UserId, Users.Name AS 'UserName', UserEvents.EventId, Events.Description AS 'EventDescription'
+                    FROM UserEvents
+                    JOIN Users on Users.UserId = UserEvents.UserId
+                    JOIN Events on Events.EventId = UserEvents.EventId
+                    ORDER BY UserEvents.UserId ASC;`;
     db.pool.query(query1, function(err, results, fields){
         if(err){
             res.status(500).send();
@@ -34,7 +36,7 @@ app.get('/api/userevents', (req, res) => {
 
 app.post('/api/userevents', (req, res) => {
     let newValue = req.body;
-    let query1 = `INSERT INTO userevents (UserId, EventId) VALUES (${newValue.UserId}, ${newValue.EventId});`;
+    let query1 = `INSERT INTO UserEvents (UserId, EventId) VALUES (${newValue.UserId}, ${newValue.EventId});`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
             res.status(500).send();
@@ -49,7 +51,7 @@ app.put('/api/userevents/:userid/:eventid', (req, res) => {
     let newValue = req.body;
     let oldUserId = req.params.userid;
     let oldEventId = req.params.eventid;
-    let query1 = `UPDATE userevents SET UserId = ${newValue.UserId}, EventId = ${newValue.EventId} WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`
+    let query1 = `UPDATE UserEvents SET UserId = ${newValue.UserId}, EventId = ${newValue.EventId} WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
             res.status(500).send();
@@ -63,13 +65,63 @@ app.put('/api/userevents/:userid/:eventid', (req, res) => {
 app.delete('/api/userevents/:userid/:eventid', (req, res) => {
     let oldUserId = req.params.userid;
     let oldEventId = req.params.eventid;
-    let query1 = `DELETE FROM userevents WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`;
+    let query1 = `DELETE FROM UserEvents WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
             res.status(500).send();
         }
         else {
             res.status(204).send();
+        }
+    });
+});
+
+/******************** Users Controller/API ********************/
+app.get('/api/users', (req, res) => {
+    let query1 = 'SELECT * FROM Users;';
+    db.pool.query(query1, function(err, results, fields){
+        if(err){
+            res.status(500).send();
+        }else{
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.post('/api/users', (req, res) => {
+    let newValue = req.body;
+    let query1 = `INSERT INTO Users (Name, Email) VALUES ('${newValue.Name}', '${newValue.Email}');`;
+    db.pool.query(query1, function(err, results, fields){
+        if (err) {
+            res.status(500).send();
+        }
+        else {
+            res.status(201).send();
+        }
+    });
+});
+
+/******************** Categories Controller/API ********************/
+app.get('/api/categories', (req, res) => {
+    let query1 = 'SELECT * FROM Categories;';
+    db.pool.query(query1, function(err, results, fields){
+        if(err){
+            res.status(500).send();
+        }else{
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.post('/api/categories', (req, res) => {
+    let newValue = req.body;
+    let query1 = `INSERT INTO Categories (CategoryName, Description) VALUES ('${newValue.CategoryName}', '${newValue.Description}');`;
+    db.pool.query(query1, function(err, results, fields){
+        if (err) {
+            res.status(500).send();
+        }
+        else {
+            res.status(201).send();
         }
     });
 });
@@ -81,6 +133,14 @@ app.get('/events', async (req, res) => {
         console.log('get request for all events'); 
         res.json(results);
     });   
+});
+
+app.get('/api/events', async (req, res) => {
+    const select_query = 'SELECT * from Events;';
+    db.pool.query(select_query,(err, results) => {
+        console.log('get request for all events'); 
+        res.json(results);
+    });
 });
 
 app.delete('/events/:id', async (req,res)=>{
@@ -143,7 +203,7 @@ app.get('/locations', (req,res) =>{
     })
 })
 
-// Send routing back to react app
+// Send routing back to react app (must be after all other routes)
 app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });

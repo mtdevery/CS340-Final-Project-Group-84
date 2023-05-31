@@ -9,16 +9,9 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateUserDialog from '../Components/CreateUserDialog';
 
-const data = [
-    { UserId: 1, Name: 'Abbie Cooper', Email: 'abbie.cooper@example.com' },
-    { UserId: 2, Name: 'Hans Dressler', Email: 'hans.dressler@example.com' },
-    { UserId: 3, Name: 'Lila Blanchard', Email: 'lila.blanchard@example.com' },
-    { UserId: 4, Name: 'Christina Campbell', Email: 'christina.campbell@example.com' },
-    { UserId: 5, Name: 'Guerete Fernandes', Email: 'guerete.fernandez@example.com' }
-]
-
 function UsersPage(){
     const [open, setOpen] = React.useState(false);
+    const [users, setUsers] = React.useState([]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -26,7 +19,18 @@ function UsersPage(){
 
     const handleClose = () => {
         setOpen(false);
+        loadAllUsers();
     };
+
+    const loadAllUsers = async () => {
+        const response = await fetch('/api/users');
+        const usersData = await response.json();
+        setUsers(usersData);
+    };
+
+    React.useEffect(() => {
+        loadAllUsers();
+    }, []);
 
     return(
         <>
@@ -39,7 +43,7 @@ function UsersPage(){
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new user
             </Button>
-            <CreateUserDialog open={open} handleClose={handleClose} />
+            <CreateUserDialog open={open} onClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="Users Table">
                     <TableHead>
@@ -50,7 +54,7 @@ function UsersPage(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {users.map((row) => (
                             <TableRow
                                 key={row.EventId}
                             >

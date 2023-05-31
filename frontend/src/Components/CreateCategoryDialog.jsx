@@ -6,7 +6,33 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button } from '@mui/material';
 
-export default function CreateCategoryDialog ({open, handleClose}) {
+export default function CreateCategoryDialog (props) {
+    const {open, onClose} = props;
+
+    const [categoryName, setCategoryName] = React.useState('');
+    const [description, setDescription] = React.useState('');
+
+    const createCategory = async () => {
+      const newCategory = { CategoryName: categoryName, Description: description };
+      const response = await fetch('/api/categories', {
+          method: 'POST',
+          body: JSON.stringify(newCategory),
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (response.status === 201){
+          alert('Successfully added category');
+          handleClose();
+      } else {
+          alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}`);
+      }
+    };
+
+    const handleClose = () => {
+      onClose();
+    };
+
     return(
         <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create New Category</DialogTitle>
@@ -22,6 +48,7 @@ export default function CreateCategoryDialog ({open, handleClose}) {
             fullWidth
             required
             variant="standard"
+            onChange={e => setCategoryName(e.target.value)}
           />
           <TextField
             margin="dense"
@@ -31,11 +58,12 @@ export default function CreateCategoryDialog ({open, handleClose}) {
             required
             multiline
             variant="standard"
+            onChange={e => setDescription(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={createCategory}>Submit</Button>
         </DialogActions>
       </Dialog>
     );

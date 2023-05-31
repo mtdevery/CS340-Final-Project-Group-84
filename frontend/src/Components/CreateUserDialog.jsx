@@ -6,7 +6,33 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button } from '@mui/material';
 
-export default function CreateUserDialog ({open, handleClose}) {
+export default function CreateUserDialog (props) {
+    const {open, onClose} = props;
+
+    const [name, setName] = React.useState('');
+    const [email, setEmail] = React.useState('');
+
+    const createUser = async () => {
+      const newUser = { Name: name, Email: email };
+      const response = await fetch('api/users', {
+          method: 'POST',
+          body: JSON.stringify(newUser),
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (response.status === 201){
+          alert('Successfully added user');
+          handleClose();
+      } else {
+          alert(`User not added. Please check that all required fields are entered. Status code = ${response.status}`);
+      }
+    };
+
+    const handleClose = () => {
+      onClose();
+    };
+
     return(
         <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create New User</DialogTitle>
@@ -19,23 +45,27 @@ export default function CreateUserDialog ({open, handleClose}) {
             margin="dense"
             id="name"
             label="Name"
+            value={name}
             fullWidth
             required
             variant="standard"
+            onChange={e => setName(e.target.value)}
           />
           <TextField
             margin="dense"
             id="description"
             label="Email"
             type="email"
+            value={email}
             fullWidth
             required
             variant="standard"
+            onChange={e => setEmail(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={createUser}>Submit</Button>
         </DialogActions>
       </Dialog>
     );
