@@ -9,22 +9,18 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateEventCategoryDialog from '../Components/CreateEventCategoryDialog';
 
-const data = [
-    { EventId: 2, CategoryId: 5},
-    { EventId: 2, CategoryId: 7},
-    { EventId: 5, CategoryId: 4}
-];
 
 function EventCategoriesPage(){
     const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const handleClickOpen = () => {setOpen(true); };
+    const handleClose = () => {setOpen(false); };
+    const [EventsCategoriesData,setEventsCategoriesData] = React.useState([]);
+    const loadEventsCategories = async () =>{
+        const response = await fetch("/eventscategories");
+        const EventsCategoriesData = await response.json();
+        setEventsCategoriesData(EventsCategoriesData);
+    }
+    React.useEffect(() => { loadEventsCategories();}, []);
 
     return(
         <>
@@ -36,7 +32,7 @@ function EventCategoriesPage(){
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new event category
             </Button>
-            <CreateEventCategoryDialog open={open} handleClose={handleClose} />
+            <CreateEventCategoryDialog open={open} onClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="EventCategories Table">
                     <TableHead>
@@ -46,9 +42,9 @@ function EventCategoriesPage(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {EventsCategoriesData.map((row,i) => (
                             <TableRow
-                                key={row.EventId}
+                                key={i}
                             >
                                 <TableCell>{row.EventId}</TableCell>
                                 <TableCell>{row.CategoryId}</TableCell>
