@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateLocationDialog from '../Components/CreateLocationDialog';
+import { Edit, Delete } from '@mui/icons-material/';
 
 function LocationsPage(){
     const [open, setOpen] = React.useState(false);
@@ -18,20 +19,19 @@ function LocationsPage(){
         setLocationList(location_data);
     }
 
-    const handleDelete = async(Location_Obj) =>{
-        const LocationId = Location_Obj.LocationId
+    const handleDelete = async(LocationId) =>{
         const response = await fetch(`/locations/${LocationId}`, { method: 'DELETE' });
         if (response.status === 204) {
-            alert('Successfully was sucessfully removed')
+            alert('successfully was sucessfully removed')
+            load_locations_data();
         } else {
             console.error(`Failed to delete Location date for: ${LocationId} , status code = ${response.status}`);
         }
-        //console.log("handle delete triggered");
+        console.log("handle delete triggered");
         load_locations_data();
     }
-
     const handleClickOpen = () => { setOpen(true);};
-    const handleClose = () => { setOpen(false); };
+    const handleClose = () => {setOpen(false);};
     React.useEffect(()=> {load_locations_data();}, [] );
     return(
         <>
@@ -59,17 +59,17 @@ function LocationsPage(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {location_list.map((row,i) => (
+                        {location_list.map((location_row,i) => (
                             <TableRow
                                 key={i}
                             >
-                                <TableCell>{row.LocationId}</TableCell>
-                                <TableCell>{row.StreetAddress}</TableCell>
-                                <TableCell>{row.City}</TableCell>
-                                <TableCell>{row.PostalCode}</TableCell>
-                                <TableCell>{row.Country}</TableCell>
-                                <TableCell><Button onClick={()=>{console.log("edit button clicked, to be implemented later")}} startIcon={<Edit/>}/></TableCell>
-                                <TableCell><Button onClick ={()=>{handleDelete(row.LocationId)}}startIcon = {<Delete color = "error"/> }/> </TableCell>
+                                <TableCell>{location_row.LocationId}</TableCell>
+                                <TableCell>{location_row.StreetAddress}</TableCell>
+                                <TableCell>{location_row.City}</TableCell>
+                                <TableCell>{location_row.PostalCode}</TableCell>
+                                <TableCell>{location_row.Country}</TableCell>
+                                <TableCell><Button onClick={()=>{console.log("edit button clicked")}} startIcon={<Edit/>}/></TableCell>
+                                <TableCell><Button onClick ={()=>{handleDelete(location_row.LocationId)}}startIcon = {<Delete color = "error"/> }/> </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -80,8 +80,3 @@ function LocationsPage(){
 }
 
 export default LocationsPage;
-
-/*
- *@todo PUT/ edit button is not working
- *
- */

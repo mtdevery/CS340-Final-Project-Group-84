@@ -11,11 +11,11 @@ export default function CreateEventDialog ({open, handleClose, data}) {
   const[date_time,setDatetime] = useState("");
   const[location_id,setLocation] = useState("");
   const[cost,setCost] = useState(0);
- 
+
   const AddEvent = async () =>
   {
     const newEvent = {description,date_time,location_id,cost} ;
-    //console.log(`NEW EVENT Location ID ${location_id}`) ; 
+    //console.log(`NEW EVENT Location ID ${location_id}`) ;
     const response = await fetch("/events",{
       method: "POST",
       body: JSON.stringify(newEvent),

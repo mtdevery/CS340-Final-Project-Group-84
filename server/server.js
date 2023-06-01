@@ -211,7 +211,7 @@ app.post('/locations', (req,res) =>{
     const City = req.body.City;
     const PostalCode = req.body.PostalCode;
     const Country = req.body.Country;
-    query = `INSERT INTO Locations(StreetAdress,City,PostalCode,Country) VALUES ${StreetAddress}, ${City}, ${PostalCode},${Country},`
+    const query = `INSERT INTO Locations(StreetAddress,City,PostalCode,Country) VALUES ("${StreetAddress}", '${City}', ${PostalCode},'${Country}');` ;
     db.pool.query(query,(err, results) =>
     {
         if(!err){
@@ -225,9 +225,10 @@ app.post('/locations', (req,res) =>{
 });
 
 app.delete('/locations/:id', (req,res) =>{
-    const Location_id = req.params.id
-    const query = `DELETE FROM Locations WHERE Locations.LocationId =${Location_id} ;`;
-    db.pool.query(query,(err, results) =>
+    const LocationId = req.params.id;
+    console.log(LocationId);
+    const query = `DELETE FROM Locations WHERE Locations.LocationId =${LocationId};`;
+    db.query(query,(err, results) =>
     {
         if(!err) {res.status(204).json(results);}
         else{console.log(err," Delete failed check syntax")}
