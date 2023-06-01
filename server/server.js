@@ -132,7 +132,7 @@ app.post('/api/categories', (req, res) => {
 });
 
 /******************** Events Controller/API ********************/
-app.get('/events', async (req, res) => {
+app.get('/events', (req, res) => {
     const select_query = 'SELECT * from Events;'
     db.pool.query(select_query,(err, results) => {
         console.log('get request for all events');
@@ -140,7 +140,7 @@ app.get('/events', async (req, res) => {
     });
 });
 
-app.delete('/events/:id', async (req,res)=>{
+app.delete('/events/:id',(req,res)=>{
     const id = req.params.id
     console.log(`delete request made for EventId:${id}`)
     const query = `DELETE FROM Events WHERE Events.EventId=${id};`
@@ -156,7 +156,7 @@ app.delete('/events/:id', async (req,res)=>{
     });
 });
 
-app.post('/events', async (req,res)=>{
+app.post('/events', (req,res)=>{
     console.log("post request made")
     const description = req.body.description;
     const date_time = req.body.date_time ;
