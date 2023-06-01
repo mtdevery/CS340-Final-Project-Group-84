@@ -22,8 +22,10 @@ export default function CreateLocationDialog ({open, handleClose}) {
       });
       if (response.status === 201){
         alert("Successful creation of entity");
+        handleClose();
       }
     }
+
     return(
         <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create a New Location</DialogTitle>

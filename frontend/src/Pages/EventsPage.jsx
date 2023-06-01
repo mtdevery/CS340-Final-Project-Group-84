@@ -13,32 +13,22 @@ import { InputLabel, Select, MenuItem } from '@mui/material';
 import CreateEventDialog from '../Components/CreateEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
-/*
-const data = [
-    { EventId: 1, Time: '08/18/2023 1:00 AM', Description: 'Bridal Party for Abbie', Cost: 17.93, LocationId: 1},
-    { EventId: 2, Time: '06/22/2023 4:58 PM', Description: 'Rolling Stones Concert', Cost: 37.97, LocationId: 2},
-    { EventId: 3, Time: '06/07/2023 4:17 PM', Description: 'Sunset Film Festival', Cost: 23.84, LocationId: 3},
-    { EventId: 4, Time: '02/06/2023 6:06 AM', Description: 'Live Band Karaoke', Cost: 39.73, LocationId: 2},
-    { EventId: 5, Time: '11/08/2023 8:00 AM', Description: 'Abbie\'s Wedding', Cost: 2.60, LocationId: 1}
-];
-*/
-
 function EventsPage(){
+    const [open, setOpen] = React.useState(false);
     const [data,setData] = useState([]); 
-    const [location_list,setLocationList] = useState([]);
+    const [location_list, setLocationList] = useState([]);
 
     const loadData = async() => {
-        const response = await(fetch("/events"));
+        const response = await fetch("/api/events");
         const data = await response.json();
         setData(data);
 
-        const response2 = await fetch("/locations");
+        const response2 = await fetch("/api/locations");
         const location_list = await response2.json();
         setLocationList(location_list);
     }
-    useEffect(()=> {loadData();}, [] );
 
-    const [open, setOpen] = React.useState(false);
+    useEffect(()=> {loadData();}, [] );
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -46,6 +36,7 @@ function EventsPage(){
 
     const handleClose = () => {
         setOpen(false);
+        loadData();
     };
 
     const handleDelete = async (id) => {
@@ -85,7 +76,7 @@ function EventsPage(){
                     </Select>
                 </FormControl>
             </span>
-            <CreateEventDialog open={open} handleClose={handleClose} data ={data} />
+            <CreateEventDialog open={open} handleClose={handleClose} data ={location_list} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="Events Table">
                     <TableHead>
@@ -95,7 +86,7 @@ function EventsPage(){
                             <TableCell>Description</TableCell>
                             <TableCell>Cost (USD)</TableCell>
                             <TableCell>Location ID</TableCell>
-                            <TableCell>Edit</TableCell>
+                            <TableCell>Edit (Not Implemented)</TableCell>
                             <TableCell>Delete</TableCell>
                         </TableRow>
                     </TableHead>
@@ -105,11 +96,11 @@ function EventsPage(){
                                 key={row.EventId}
                             >
                                 <TableCell>{row.EventId}</TableCell>
-                                <TableCell>{moment(row.Time).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+                                <TableCell>{row.Time}</TableCell>
                                 <TableCell>{row.Description}</TableCell>
                                 <TableCell>{row.Cost}</TableCell>
                                 <TableCell>{row.LocationId}</TableCell>
-                                <TableCell><Button onClick={handleClickOpen} startIcon={<Edit />}></Button></TableCell>
+                                <TableCell><Button disabled={true} onClick={handleClickOpen} startIcon={<Edit />}></Button></TableCell>
                                 <TableCell><Button onClick={()=> handleDelete(row.EventId)} startIcon={<Delete color='error' />}></Button></TableCell>
                             </TableRow>
                         ))}

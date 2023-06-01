@@ -14,11 +14,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors())
 app.use(express.urlencoded({extended: true}))
-// Send routing back to react app (must be after all other routes)
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
-
 
 // Serve static react app
 app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -132,7 +127,7 @@ app.post('/api/categories', (req, res) => {
 });
 
 /******************** Events Controller/API ********************/
-app.get('/events', (req, res) => {
+app.get('/api/events', (req, res) => {
     const select_query = 'SELECT * from Events;'
     db.pool.query(select_query,(err, results) => {
         console.log('get request for all events');
@@ -150,7 +145,7 @@ app.delete('/events/:id',(req,res)=>{
             res.status(500).send();
         }
         else{
-            console.log("sucessfully removed event") ;
+            console.log("successfully removed event") ;
             res.status(204).send() ;
         }
     });
@@ -193,15 +188,15 @@ app.put('/events',(req,res)=>{
 
 
 /**********************Locations Controller ***************** */
-app.get('/locations', (req,res) =>{
+app.get('/api/locations', (req,res) =>{
     const query = "SELECT * FROM Locations ORDER BY City ASC";
     db.pool.query(query,(err, results) =>
     {
-        if(!err){
-            res.status(200).json(results);
+        if(err){
+            res.status(500).send();
         }
         else{
-            console.log(err);
+            res.status(200).send(JSON.stringify(results));
         }
     })
 });
@@ -214,12 +209,11 @@ app.post('/locations', (req,res) =>{
     const query = `INSERT INTO Locations(StreetAddress,City,PostalCode,Country) VALUES ("${StreetAddress}", '${City}', ${PostalCode},'${Country}');` ;
     db.pool.query(query,(err, results) =>
     {
-        if(!err){
-            res.status(201).send();
-        }
-        else{
+        if(err){
             res.status(500).send();
-            console.log(`Error in SQL syntax to create Location ${err}`)
+            
+        }else{
+            res.status(201).send();
         }
     })
 });
@@ -228,10 +222,13 @@ app.delete('/locations/:id', (req,res) =>{
     const LocationId = req.params.id;
     console.log(LocationId);
     const query = `DELETE FROM Locations WHERE Locations.LocationId =${LocationId};`;
-    db.query(query,(err, results) =>
+    db.pool.query(query,(err, results) =>
     {
-        if(!err) {res.status(204).json(results);}
-        else{console.log(err," Delete failed check syntax")}
+        if(err) {
+            res.status(500).send();
+        } else {
+            res.status(204).json(results);
+        }
     })
 });
 
@@ -280,6 +277,11 @@ app.delete('/eventscategories/:eventid/:categoryid', (req,res) =>{
     db.pool.query(query,(err, results) => {
     })
 });*/
+
+// Send routing back to react app (must be after all other routes)
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
 
 const PORT = process.env.PORT || 14443; // We don't have dotenv installed in express.json() - install first for testing on other ports if needed
 app.listen(PORT, () => {

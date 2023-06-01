@@ -12,9 +12,10 @@ import { Edit, Delete } from '@mui/icons-material/';
 
 function LocationsPage(){
     const [open, setOpen] = React.useState(false);
-    const [location_list,setLocationList] = React.useState([])
+    const [location_list,setLocationList] = React.useState([]);
+
     const load_locations_data =  async () =>{
-        const response = await fetch("./locations") ;
+        const response = await fetch("/api/locations") ;
         const location_data =  await response.json()
         setLocationList(location_data);
     }
@@ -22,7 +23,7 @@ function LocationsPage(){
     const handleDelete = async(LocationId) =>{
         const response = await fetch(`/locations/${LocationId}`, { method: 'DELETE' });
         if (response.status === 204) {
-            alert('successfully was sucessfully removed')
+            alert('Location was sucessfully removed')
             load_locations_data();
         } else {
             console.error(`Failed to delete Location date for: ${LocationId} , status code = ${response.status}`);
@@ -30,8 +31,16 @@ function LocationsPage(){
         console.log("handle delete triggered");
         load_locations_data();
     }
-    const handleClickOpen = () => { setOpen(true);};
-    const handleClose = () => {setOpen(false);};
+
+    const handleClickOpen = () => { 
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        load_locations_data();
+    };
+
     React.useEffect(()=> {load_locations_data();}, [] );
     return(
         <>
@@ -54,8 +63,6 @@ function LocationsPage(){
                             <TableCell>City</TableCell>
                             <TableCell>Postal Code</TableCell>
                             <TableCell>Country</TableCell>
-                            <TableCell> Edit </TableCell>
-                            <TableCell> Delete </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -68,8 +75,6 @@ function LocationsPage(){
                                 <TableCell>{location_row.City}</TableCell>
                                 <TableCell>{location_row.PostalCode}</TableCell>
                                 <TableCell>{location_row.Country}</TableCell>
-                                <TableCell><Button onClick={()=>{console.log("edit button clicked")}} startIcon={<Edit/>}/></TableCell>
-                                <TableCell><Button onClick ={()=>{handleDelete(location_row.LocationId)}}startIcon = {<Delete color = "error"/> }/> </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

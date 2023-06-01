@@ -32,7 +32,7 @@ function EventCategoriesPage(){
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new event category
             </Button>
-            <CreateEventCategoryDialog open={open} handleClose={handleClose} />
+            <CreateEventCategoryDialog open={open} onClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="EventCategories Table">
                     <TableHead>

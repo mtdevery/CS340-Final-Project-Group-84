@@ -7,25 +7,27 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, Input, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function CreateEventDialog ({open, handleClose, data}) {
-  const[description,setDescription]= useState("");
-  const[date_time,setDatetime] = useState("");
-  const[location_id,setLocation] = useState("");
-  const[cost,setCost] = useState(0);
+    const [description,setDescription] = React.useState("");
+    const [date_time,setDatetime] = React.useState("");
+    const [location_id, setLocation] = React.useState("");
+    const [cost,setCost] = React.useState(0);
+  
+    const AddEvent = async () =>
+    {
+      const newEvent = {description, date_time, location_id, cost} ;
+      //console.log(`NEW EVENT Location ID ${location_id}`) ; 
+      const response = await fetch("/events",{
+        method: "POST",
+        body: JSON.stringify(newEvent),
+        headers:{'Content-Type': 'application/json'}
+      });
 
-  const AddEvent = async () =>
-  {
-    const newEvent = {description,date_time,location_id,cost} ;
-    //console.log(`NEW EVENT Location ID ${location_id}`) ;
-    const response = await fetch("/events",{
-      method: "POST",
-      body: JSON.stringify(newEvent),
-      headers:{'Content-Type': 'application/json'}
-    });
-
-    if (response.status === 201){
-      alert("Successful creation of entity");
+      if (response.status === 201){
+        alert("Successfully created the new Event!");
+        handleClose();
+      }
     }
-  }
+
     return(
         <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create a New Event</DialogTitle>
@@ -75,8 +77,8 @@ export default function CreateEventDialog ({open, handleClose, data}) {
               onChange={(e)=>{setLocation(e.target.value)}}
             >
               {data.map((event_row,i) => 
-                <MenuItem key = {event_row.EventId} value = {event_row.LocationId} >  
-                  {event_row.Description}  
+                <MenuItem value = {event_row.LocationId}>
+                  {event_row.City}  
                 </MenuItem>)} 
             </Select>
           </FormControl>
