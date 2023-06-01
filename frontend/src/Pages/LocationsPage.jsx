@@ -9,24 +9,30 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateLocationDialog from '../Components/CreateLocationDialog';
 
-const data = [
-    { LocationId: 1, StreetAddress: '111 Local Street', City: 'Eugene', PostalCode: 11111, Country: 'United States'},
-    { LocationId: 2, StreetAddress: '101 Event Street', City: 'Springfield', PostalCode: 11010, Country: 'United States'},
-    { LocationId: 3, StreetAddress: '000 Nowhere Road', City: 'Corvallis', PostalCode: 10000, Country: 'United States'},
-    { LocationId: 4, StreetAddress: '60025 Bollinger Canyon Road', City: 'San Ramon', PostalCode: 94583, Country: 'United States'}
-]
-
 function LocationsPage(){
     const [open, setOpen] = React.useState(false);
+    const [location_list,setLocationList] = React.useState([])
+    const load_locations_data =  async () =>{
+        const response = await fetch("./locations") ;
+        const location_data =  await response.json()
+        setLocationList(location_data);
+    }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    const handleDelete = async(Location_Obj) =>{
+        const LocationId = Location_Obj.LocationId
+        const response = await fetch(`/locations/${LocationId}`, { method: 'DELETE' });
+        if (response.status === 204) {
+            alert('Successfully was sucessfully removed')
+        } else {
+            console.error(`Failed to delete Location date for: ${LocationId} , status code = ${response.status}`);
+        }
+        //console.log("handle delete triggered");
+        load_locations_data();
+    }
 
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+    const handleClickOpen = () => { setOpen(true);};
+    const handleClose = () => { setOpen(false); };
+    React.useEffect(()=> {load_locations_data();}, [] );
     return(
         <>
             <h2>Locations</h2>
@@ -48,18 +54,22 @@ function LocationsPage(){
                             <TableCell>City</TableCell>
                             <TableCell>Postal Code</TableCell>
                             <TableCell>Country</TableCell>
+                            <TableCell> Edit </TableCell>
+                            <TableCell> Delete </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {location_list.map((row,i) => (
                             <TableRow
-                                key={row.EventId}
+                                key={i}
                             >
                                 <TableCell>{row.LocationId}</TableCell>
                                 <TableCell>{row.StreetAddress}</TableCell>
                                 <TableCell>{row.City}</TableCell>
                                 <TableCell>{row.PostalCode}</TableCell>
                                 <TableCell>{row.Country}</TableCell>
+                                <TableCell><Button onClick={()=>{console.log("edit button clicked, to be implemented later")}} startIcon={<Edit/>}/></TableCell>
+                                <TableCell><Button onClick ={()=>{handleDelete(row.LocationId)}}startIcon = {<Delete color = "error"/> }/> </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -70,3 +80,8 @@ function LocationsPage(){
 }
 
 export default LocationsPage;
+
+/*
+ *@todo PUT/ edit button is not working
+ *
+ */

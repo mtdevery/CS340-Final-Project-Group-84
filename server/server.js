@@ -12,8 +12,13 @@ const cors = require('cors') ; // allows request when requests are made from hos
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
-app.use(cors()) 
+app.use(cors())
 app.use(express.urlencoded({extended: true}))
+// Send routing back to react app (must be after all other routes)
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
+
 
 // Serve static react app
 app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -130,15 +135,7 @@ app.post('/api/categories', (req, res) => {
 app.get('/events', async (req, res) => {
     const select_query = 'SELECT * from Events;'
     db.pool.query(select_query,(err, results) => {
-        console.log('get request for all events'); 
-        res.json(results);
-    });   
-});
-
-app.get('/api/events', async (req, res) => {
-    const select_query = 'SELECT * from Events;';
-    db.pool.query(select_query,(err, results) => {
-        console.log('get request for all events'); 
+        console.log('get request for all events');
         res.json(results);
     });
 });
@@ -148,23 +145,23 @@ app.delete('/events/:id', async (req,res)=>{
     console.log(`delete request made for EventId:${id}`)
     const query = `DELETE FROM Events WHERE Events.EventId=${id};`
     db.pool.query(query,(err,results,fields) =>{
-        if(err){ 
+        if(err){
             console.log(`Unable to perform delete ERROR:${err}`);
             res.status(500).send();
         }
         else{
-            console.log("sucessfully removed event") ; 
+            console.log("sucessfully removed event") ;
             res.status(204).send() ;
         }
-    });  
+    });
 });
 
 app.post('/events', async (req,res)=>{
     console.log("post request made")
     const description = req.body.description;
-    const date_time = req.body.date_time ; 
+    const date_time = req.body.date_time ;
     const cost = (req.body.cost) ;
-    const location_id = req.body.location_id; 
+    const location_id = req.body.location_id;
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
     let new_query = ` INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
     db.pool.query(new_query, function(err, results, fields){
@@ -176,39 +173,113 @@ app.post('/events', async (req,res)=>{
             console.log(`Entity Creation Query Failed ERROR:${err}`);
             res.status(500);
         }
-    }); 
+    });
 });
 
-/******  PUT NOT FINISHED YET  
+/*
+ * PUT NOT FINISHED YET
 app.put('/events',(req,res)=>{
     const description = req.body.description;
-    const date_time = req.body.date_time ; 
+    const date_time = req.body.date_time ;
     const cost = (req.body.cost) ;
-    const location_id = req.body.location_id; 
+    const location_id = req.body.location_id;
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
     let new_query = ` UPDATE Events SET Time='${final_datetime}',Description='${description}',Cost=${cost},Location=${location_id} WHERE Event.EventId = ${req.params.id}`
     db.query(new_query, function(err, results, fields){
         console.log("success")
-    }); 
+    });
 });
-********************************/
-/******************** Events Controller END ********************/
+*/
 
 
 /**********************Locations Controller ***************** */
 app.get('/locations', (req,res) =>{
     const query = "SELECT * FROM Locations ORDER BY City ASC";
-    db.query(query,(err, results) => {
+    db.pool.query(query,(err, results) =>
+    {
+        if(!err){
+            res.status(200).json(results);
+        }
+        else{
+            console.log(err);
+        }
+    })
+});
+
+app.post('/locations', (req,res) =>{
+    const StreetAddress = req.body.StreetAddress;
+    const City = req.body.City;
+    const PostalCode = req.body.PostalCode;
+    const Country = req.body.Country;
+    query = `INSERT INTO Locations(StreetAdress,City,PostalCode,Country) VALUES ${StreetAddress}, ${City}, ${PostalCode},${Country},`
+    db.pool.query(query,(err, results) =>
+    {
+        if(!err){
+            res.status(201).send();
+        }
+        else{
+            res.status(500).send();
+            console.log(`Error in SQL syntax to create Location ${err}`)
+        }
+    })
+});
+
+app.delete('/locations/:id', (req,res) =>{
+    const Location_id = req.params.id
+    const query = `DELETE FROM Locations WHERE Locations.LocationId =${Location_id} ;`;
+    db.pool.query(query,(err, results) =>
+    {
+        if(!err) {res.status(204).json(results);}
+        else{console.log(err," Delete failed check syntax")}
+    })
+});
+
+/*app.put('/locations/:id', (req,res) =>{
+    db.pool.query(query,(err, results) => {
         res.json(results);
+    })
+});*/
+
+/**********************EventsCategories Controller ***************** */
+app.get('/eventscategories', (req,res) =>{
+    const query = "SELECT * from EventCategories;"
+    db.pool.query(query,(err, results) => {
+        if (!err)
+            res.json(results);
+        else{
+            console.log(err);
+        }
+    })
+});
+
+app.post('/eventscategories', (req,res) =>{
+    const EventId = req.body.EventId;
+    const CategoryId = req.body.CategoryId;
+    const query = `INSERT INTO EventCategories (EventCategories.EventId,EventCategories.CategoryId) VALUES(${EventId},${CategoryId});`
+    db.pool.query(query,(err, results) => {
+        if(!err)
+            res.status(201).send()
+        else { res.status(500).send()}
+    })
+});
+
+app.delete('/eventscategories/:eventid/:categoryid', (req,res) =>{
+    const EventId = req.params.eventid;
+    const CategoryId = req.params.categoryid;
+    const query = `DELETE FROM EventsCategories WHERE EventCategories.EventId = ${EventId} and  EventCategories.CategoryId = ${CategoryId}; `
+    db.pool.query(query,(err, results) => {
+        if (!err) {res.status(201).send()}
+        else{res.status(500).send()}
+        console.log(results);
     })
 })
 
-// Send routing back to react app (must be after all other routes)
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
+/*app.put('/eventscategories/:eventid/:categoryid', (req,res) =>{
+    const query =
+    db.pool.query(query,(err, results) => {
+    })
+});*/
 
-/* Start the server */
 const PORT = process.env.PORT || 14443; // We don't have dotenv installed in express.json() - install first for testing on other ports if needed
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

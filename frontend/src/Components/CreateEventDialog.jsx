@@ -7,7 +7,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, Input, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function CreateEventDialog ({open, handleClose, data}) {
-    
   const[description,setDescription]= useState("");
   const[date_time,setDatetime] = useState("");
   const[location_id,setLocation] = useState("");
