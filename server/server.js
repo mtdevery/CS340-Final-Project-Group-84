@@ -211,7 +211,6 @@ app.post('/locations', (req,res) =>{
     {
         if(err){
             res.status(500).send();
-            
         }else{
             res.status(201).send();
         }
@@ -240,10 +239,16 @@ app.delete('/locations/:id', (req,res) =>{
 
 /**********************EventsCategories Controller ***************** */
 app.get('/eventscategories', (req,res) =>{
-    const query = "SELECT * from EventCategories;"
-    db.pool.query(query,(err, results) => {
-        if (!err)
+    //const query = "SELECT * from EventCategories;"
+    const query = ` SELECT EventCategories.EventId, Events.Time , Events.Description AS Event_Description,EventCategories.CategoryId,Categories.Description AS Category_Description,Locations.Country,Locations.City,Locations.StreetAddress FROM
+    EventCategories INNER JOIN Events on Events.EventId = EventCategories.EventId
+    INNER JOIN Categories ON Categories.CategoryId = EventCategories.CategoryId
+    INNER JOIN Locations on Locations.LocationId = Events.LocationId;`;
+    db.query(query,(err, results) => {
+        if (!err){
             res.json(results);
+            console.log(results);
+        }
         else{
             console.log(err);
         }

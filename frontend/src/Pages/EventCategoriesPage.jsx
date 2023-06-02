@@ -32,13 +32,18 @@ function EventCategoriesPage(){
             <Button sx={{ marginBottom: "5px" }} variant="outlined" onClick={handleClickOpen}>
                 Add a new event category
             </Button>
-            <CreateEventCategoryDialog open={open} onClose={handleClose} />
+            <CreateEventCategoryDialog open={open} handleClose={handleClose} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="EventCategories Table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Event ID</TableCell>
                             <TableCell>Category ID</TableCell>
+                            <TableCell> Time </TableCell>
+                            <TableCell> Event Description</TableCell>
+                            <TableCell> Event Country </TableCell>
+                            <TableCell> City </TableCell>
+                            <TableCell> Street Address</TableCell>                                        
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -48,6 +53,11 @@ function EventCategoriesPage(){
                             >
                                 <TableCell>{row.EventId}</TableCell>
                                 <TableCell>{row.CategoryId}</TableCell>
+                                <TableCell>{row.Time}</TableCell>
+                                <TableCell>{row.Event_Description} </TableCell>
+                                <TableCell>{row.Country}</TableCell>
+                                <TableCell>{row.City}</TableCell>
+                                <TableCell>{row.StreetAddress}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
