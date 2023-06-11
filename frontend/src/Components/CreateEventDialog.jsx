@@ -4,13 +4,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Button, Input, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { TextField, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function CreateEventDialog ({open, handleClose, data}) {
     const [description,setDescription] = React.useState("");
     const [date_time,setDatetime] = React.useState("");
     const [location_id, setLocation] = React.useState("");
     const [cost,setCost] = React.useState(0);
+
     const AddEvent = async () =>
     {
       const newEvent = {description, date_time, location_id, cost} ;

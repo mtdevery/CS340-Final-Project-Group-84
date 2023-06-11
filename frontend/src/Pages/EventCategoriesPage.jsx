@@ -14,9 +14,16 @@ import EditEventCategorydialog from '../Components/EditEventCategory';
 
 function EventCategoriesPage(){
     const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {setOpen(true); };
-    const handleClose = () => {setOpen(false); };
     const [EventsCategoriesData,setEventsCategoriesData] = React.useState([]);
+
+    const handleClickOpen = () => {
+        setOpen(true); 
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        loadEventsCategories();
+    };
 
     const [CategoriesData,setCategoriesData] = React.useState([]);
     const [EventsData,setEventsData] = useState([]);
@@ -46,9 +53,11 @@ function EventCategoriesPage(){
         const EventsData = await response3.json();
         setEventsData(EventsData);
     }
+
     React.useEffect(() => {
         loadEventsCategories()
         ;}, []);
+
     return(
         <>
             <h2>Event Categories</h2>

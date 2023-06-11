@@ -19,6 +19,13 @@ function HomePage(){
             requirements for scalability and speed. We plan to scale our database infrastructure to be able to record 100,000 events with no 
             drop in performance in the web application.
             </p>
+            <h3>Database</h3>
+            <p style={{ maxWidth: "1000px" }}>
+            Our application uses a MySql and Express/NodeJS backend to manage the six tables in the database that power this website. Each of the 
+            tables can be viewed using the navigation tab on the left to navigate to their respective page. Each of the pages implements functionality
+            to create a new row in the table using an intuitive popup form. Additionally, the Events and UserEvents pages implement the functionality for 
+            edit and delete.
+            </p>
         </>
     );
 }
