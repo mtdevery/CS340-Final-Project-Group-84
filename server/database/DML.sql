@@ -40,7 +40,9 @@ INSERT INTO Categories VALUES ($newCategoryName, $newDescription);
 
 /*Events Table*/
 -- retrieving all events currently stored
-SELECT * from Events;
+SELECT Events.EventId, Events.Time, Events.Description, Events.Cost, Events.LocationI, Locations.City
+FROM Events
+LEFT JOIN Locations ON Events.LocationId = Locations.Id;
 
 -- adding a new event
 INSERT INTO Events(Time, Description, Cost, LocationId)
