@@ -25,7 +25,8 @@ export default function CreateCategoryDialog (props) {
           alert('Successfully added category');
           handleClose();
       } else {
-          alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}`);
+          const errorResponse = await response.json();
+          alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     };
 

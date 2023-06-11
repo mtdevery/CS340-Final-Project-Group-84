@@ -52,8 +52,12 @@ function EventsPage(){
 
     const handleDelete = async (id) => {
         const response = await fetch(`/events/${id}`,{method: "DELETE" }) // currently nothing but status is returned
-        if (response.status === 204) {console.log('successful delete on backend');}
-        else{console.log('failed to make deletion');}
+        if (response.status === 204) {
+            console.log('successful delete on backend');
+        } else {
+            const errorResponse = await response.json();
+            alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
+        }
         loadData();
     };
     useEffect(()=> {loadData();}, [] );

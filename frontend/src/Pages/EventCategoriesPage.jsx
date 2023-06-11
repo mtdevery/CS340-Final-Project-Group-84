@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState,useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,8 +9,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CreateEventCategoryDialog from '../Components/CreateEventCategoryDialog';
-import { Edit, Delete } from '@mui/icons-material/';
-import EditEventCategorydialog from '../Components/EditEventCategory';
 
 function EventCategoriesPage(){
     const [open, setOpen] = React.useState(false);
@@ -27,18 +25,6 @@ function EventCategoriesPage(){
 
     const [CategoriesData,setCategoriesData] = React.useState([]);
     const [EventsData,setEventsData] = useState([]);
-    const [editOpen,seteditOpen] = useState(false);
-
-    const [EVCtoEdit,setEVCtoEdit]= useState('');
-    const handleEditOpen = (EVC) =>{
-        setEVCtoEdit(EVC);
-        seteditOpen(true);
-    };
-
-    const handleEditClose = () => {
-        seteditOpen(false);
-        loadEventsCategories();
-     };
 
     const loadEventsCategories = async () =>{
         const response = await fetch("/eventscategories");
@@ -69,7 +55,6 @@ function EventCategoriesPage(){
                 Add a new event category
             </Button>
             <CreateEventCategoryDialog open={open} handleClose={handleClose} CategoriesData={CategoriesData} EventsData = {EventsData} />
-            <EditEventCategorydialog EVC={EVCtoEdit} editOpen={editOpen} handleClose = {handleEditClose} CategoriesData = {CategoriesData} EventsData = {EventsData} />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="EventCategories Table">
                     <TableHead>

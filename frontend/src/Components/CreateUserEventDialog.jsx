@@ -27,7 +27,8 @@ export default function CreateUserEventDialog (props) {
           alert('Successfully added event');
           handleClose();
       } else {
-          alert(`User Event not added. Please check that all required fields are entered. Status code = ${response.status}`);
+          const errorResponse = await response.json();
+          alert(`User Event not added. Please check that all required fields are entered. Status code = ${response.status}, message=${errorResponse.message}`);
       }
     };
 

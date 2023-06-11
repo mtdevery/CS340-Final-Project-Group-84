@@ -25,6 +25,9 @@ export default function CreateEventDialog ({open, handleClose, data}) {
       if (response.status === 201){
         alert("Successfully created the new Event!");
         handleClose();
+      } else {
+        const errorResponse = await response.json();
+        alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     }
 
