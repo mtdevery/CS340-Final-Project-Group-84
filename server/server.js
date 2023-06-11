@@ -19,6 +19,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 /******************** UserEvents Controller/API ********************/
+// Retrieve all user events
 app.get('/api/userevents', (req, res) => {
     let query1 = `SELECT UserEvents.UserId, Users.Name AS 'UserName', UserEvents.EventId, Events.Description AS 'EventDescription'
                     FROM UserEvents
@@ -34,6 +35,7 @@ app.get('/api/userevents', (req, res) => {
     });
 });
 
+// Add a new user event with the Ids
 app.post('/api/userevents', (req, res) => {
     let newValue = req.body;
     let query1 = `INSERT INTO UserEvents (UserId, EventId) VALUES (${newValue.UserId}, ${newValue.EventId});`;
@@ -47,6 +49,7 @@ app.post('/api/userevents', (req, res) => {
     });
 });
 
+// Update the userEvent with given Ids
 app.put('/api/userevents/:userid/:eventid', (req, res) => {
     let newValue = req.body;
     let oldUserId = req.params.userid;
@@ -62,6 +65,7 @@ app.put('/api/userevents/:userid/:eventid', (req, res) => {
     });
 });
 
+// Delete the UserEvent with the given Ids
 app.delete('/api/userevents/:userid/:eventid', (req, res) => {
     let oldUserId = req.params.userid;
     let oldEventId = req.params.eventid;
@@ -77,8 +81,9 @@ app.delete('/api/userevents/:userid/:eventid', (req, res) => {
 });
 
 /******************** Users Controller/API ********************/
+// Retrieve all users in the database
 app.get('/api/users', (req, res) => {
-    let query1 = 'SELECT * FROM Users;';
+    let query1 = 'SELECT * FROM Users ORDER BY Name ASC;';
     db.pool.query(query1, function(err, results, fields){
         if(err){
             res.status(500).send();
@@ -88,6 +93,7 @@ app.get('/api/users', (req, res) => {
     });
 });
 
+// Create a new user in the database
 app.post('/api/users', (req, res) => {
     let newValue = req.body;
     let query1 = `INSERT INTO Users (Name, Email) VALUES ('${newValue.Name}', '${newValue.Email}');`;
@@ -102,6 +108,7 @@ app.post('/api/users', (req, res) => {
 });
 
 /******************** Categories Controller/API ********************/
+// Retrieve all categories from the database
 app.get('/api/categories', (req, res) => {
     let query1 = 'SELECT * FROM Categories;';
     db.pool.query(query1, function(err, results, fields){
@@ -113,6 +120,7 @@ app.get('/api/categories', (req, res) => {
     });
 });
 
+// Create a new category entry in the database
 app.post('/api/categories', (req, res) => {
     let newValue = req.body;
     let query1 = `INSERT INTO Categories (CategoryName, Description) VALUES ('${newValue.CategoryName}', '${newValue.Description}');`;
@@ -128,7 +136,9 @@ app.post('/api/categories', (req, res) => {
 
 /******************** Events Controller/API ********************/
 app.get('/api/events', (req, res) => {
-    const select_query = 'SELECT * from Events;'
+    const select_query = `SELECT Events.EventId, Events.Time, Events.Description, Events.Cost, Events.LocationId, Locations.City
+                            FROM Events
+                            LEFT JOIN Locations ON Events.LocationId = Locations.LocationId;`
     db.pool.query(select_query,(err, results) => {
         console.log('get request for all events');
         res.json(results);
@@ -152,13 +162,12 @@ app.delete('/events/:id',(req,res)=>{
 });
 
 app.post('/events', (req,res)=>{
-    console.log("post request made")
     const description = req.body.description;
-    const date_time = req.body.date_time ;
-    const cost = (req.body.cost) ;
+    const date_time = req.body.date_time;
+    const cost = (req.body.cost);
     const location_id = req.body.location_id;
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
-    let new_query = ` INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
+    let new_query = `INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
     db.pool.query(new_query, function(err, results, fields){
         if(!err){
             console.log(`Sucessful Query SQL Syntax Used: ${new_query}`);
@@ -171,25 +180,31 @@ app.post('/events', (req,res)=>{
     });
 });
 
-/*
- * PUT NOT FINISHED YET
-app.put('/events',(req,res)=>{
-    const description = req.body.description;
-    const date_time = req.body.date_time ;
-    const cost = (req.body.cost) ;
-    const location_id = req.body.location_id;
-    const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
-    let new_query = ` UPDATE Events SET Time='${final_datetime}',Description='${description}',Cost=${cost},Location=${location_id} WHERE Event.EventId = ${req.params.id}`
-    db.query(new_query, function(err, results, fields){
-        console.log("success")
-    });
+
+app.put('/events/:id',(req,res)=>{
+    const EventId = req.params.id
+    const Description = req.body.Description;
+    const Time = req.body.Time;
+    const Cost = req.body.Cost
+
+    let LocationId = req.body.LocationId;
+    if (LocationId === -1){
+        LocationId = "NULL";
+    }
+    const new_query = `UPDATE Events SET Time="${Time}",Description="${Description}",Cost=${Cost},LocationId=${LocationId} WHERE Events.EventId = ${EventId};`
+    console.log(new_query)
+    db.pool.query(new_query, function(err, results, fields){
+        if(err){ res.status(400).send()}
+        else{
+            res.status(200).send();
+        }
+     });
 });
-*/
 
 
 /**********************Locations Controller ***************** */
 app.get('/api/locations', (req,res) =>{
-    const query = "SELECT * FROM Locations ORDER BY City ASC";
+    const query = "SELECT * FROM Locations ORDER BY City ASC;";
     db.pool.query(query,(err, results) =>
     {
         if(err){
@@ -206,44 +221,29 @@ app.post('/locations', (req,res) =>{
     const City = req.body.City;
     const PostalCode = req.body.PostalCode;
     const Country = req.body.Country;
-    const query = `INSERT INTO Locations(StreetAddress,City,PostalCode,Country) VALUES ("${StreetAddress}", '${City}', ${PostalCode},'${Country}');` ;
+    const query = `INSERT INTO Locations(StreetAddress,City,PostalCode,Country) VALUES ("${StreetAddress}", '${City}', ${PostalCode},'${Country}');`;
     db.pool.query(query,(err, results) =>
     {
         if(err){
             res.status(500).send();
-            
         }else{
             res.status(201).send();
         }
     })
 });
 
-app.delete('/locations/:id', (req,res) =>{
-    const LocationId = req.params.id;
-    console.log(LocationId);
-    const query = `DELETE FROM Locations WHERE Locations.LocationId =${LocationId};`;
-    db.pool.query(query,(err, results) =>
-    {
-        if(err) {
-            res.status(500).send();
-        } else {
-            res.status(204).json(results);
-        }
-    })
-});
-
-/*app.put('/locations/:id', (req,res) =>{
-    db.pool.query(query,(err, results) => {
-        res.json(results);
-    })
-});*/
 
 /**********************EventsCategories Controller ***************** */
 app.get('/eventscategories', (req,res) =>{
-    const query = "SELECT * from EventCategories;"
+    //const query = "SELECT * from EventCategories;"
+    const query = `SELECT EventCategories.EventId, Events.Time , Events.Description AS Event_Description,EventCategories.CategoryId,Categories.Description AS Category_Description,Locations.Country,Locations.City,Locations.StreetAddress FROM
+                    EventCategories INNER JOIN Events on Events.EventId = EventCategories.EventId
+                    INNER JOIN Categories ON Categories.CategoryId = EventCategories.CategoryId
+                    INNER JOIN Locations on Locations.LocationId = Events.LocationId;`;
     db.pool.query(query,(err, results) => {
-        if (!err)
+        if (!err){
             res.json(results);
+        }
         else{
             console.log(err);
         }
@@ -255,28 +255,15 @@ app.post('/eventscategories', (req,res) =>{
     const CategoryId = req.body.CategoryId;
     const query = `INSERT INTO EventCategories (EventCategories.EventId,EventCategories.CategoryId) VALUES(${EventId},${CategoryId});`
     db.pool.query(query,(err, results) => {
-        if(!err)
+        if(!err){
             res.status(201).send()
-        else { res.status(500).send()}
-    })
+            //console.log(results)
+        }else{
+            res.status(500).send()
+           // console.log(err)
+    }});
 });
 
-app.delete('/eventscategories/:eventid/:categoryid', (req,res) =>{
-    const EventId = req.params.eventid;
-    const CategoryId = req.params.categoryid;
-    const query = `DELETE FROM EventsCategories WHERE EventCategories.EventId = ${EventId} and  EventCategories.CategoryId = ${CategoryId}; `
-    db.pool.query(query,(err, results) => {
-        if (!err) {res.status(201).send()}
-        else{res.status(500).send()}
-        console.log(results);
-    })
-})
-
-/*app.put('/eventscategories/:eventid/:categoryid', (req,res) =>{
-    const query =
-    db.pool.query(query,(err, results) => {
-    })
-});*/
 
 // Send routing back to react app (must be after all other routes)
 app.use((req, res, next) => {

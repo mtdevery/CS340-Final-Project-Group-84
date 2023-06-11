@@ -44,7 +44,7 @@ function UserEventsPage(){
 
     const handleDelete = async (userEvent) => {
         const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, { 
-            method: 'DELETE' 
+            method: 'DELETE'
         });
         if (response.status === 204) {
             alert('Successfully deleted the selected user event!')
