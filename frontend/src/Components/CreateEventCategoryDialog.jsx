@@ -27,6 +27,8 @@ export default function CreateEventCategoryDialog (props) {
         closeEVC();
       } else{
         console.log("Event Category creation failed ");
+        const errorResponse = await response.json();
+        alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     }
 

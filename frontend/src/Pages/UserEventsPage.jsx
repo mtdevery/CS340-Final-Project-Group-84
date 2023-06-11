@@ -50,7 +50,8 @@ function UserEventsPage(){
             alert('Successfully deleted the selected user event!')
             loadAllUserEvents();
         } else {
-            console.error(`Failed to delete the user event, status code = ${response.status}`);
+            const errorResponse = await response.json();
+            alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
         }
     };
 

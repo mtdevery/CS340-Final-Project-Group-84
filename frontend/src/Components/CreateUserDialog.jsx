@@ -25,7 +25,8 @@ export default function CreateUserDialog (props) {
           alert('Successfully added user');
           handleClose();
       } else {
-          alert(`User not added. Please check that all required fields are entered. Status code = ${response.status}`);
+          const errorResponse = await response.json();
+          alert(`User not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     };
 

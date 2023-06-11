@@ -28,9 +28,10 @@ export default function EditEventDialog ({editOpen,handleClose,Event,Locations})
         if (response.status === 200){
             alert(`Sucessfully Updated event details`);
         }else{
-            alert("event not added check data within fields");
+            const errorResponse = await response.json();
+            alert(`event not added check data within fields, status = ${response.status}, message = ${errorResponse.message}`);
         }
-        handleClose()
+        handleClose();
     }
 
     useEffect(() =>{
