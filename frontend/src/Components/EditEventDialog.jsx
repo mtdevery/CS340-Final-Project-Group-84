@@ -23,10 +23,14 @@ export default function EditEventDialog ({editOpen,handleClose,Event,Locations})
         const response = await fetch(`/events/${eventId}`, {
             method: 'PUT',
             body: JSON.stringify(updated_event),
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            headers: {'Content-Type': 'application/json'}
         });
+        if (response.status === 200){
+            alert(`Sucessfully Updated event details`);
+        }else{
+            alert("event not added check data within fields");
+        }
+        handleClose()
     }
 
     useEffect(() =>{
@@ -68,29 +72,30 @@ export default function EditEventDialog ({editOpen,handleClose,Event,Locations})
                         defaultValue={Event.Cost}
                         onChange = {e => seteventCost(e.target.value)}
                     />
-
                     <Select
                         margin="dense"
-                        required
-                        value={Event.LocationId}
                         variant="standard"
                         label="Location"
                         fullWidth
                         onChange = {e=>seteventLocationID(e.target.value)}
+                        defaultValue={Event.LocationId || -1 }
                     >
                         {Locations.map((location_row,i) => (
-                        <MenuItem value={location_row.LocationId} >
-                            City:{location_row.City}    =   LocationId:{location_row.LocationId }
+                        <MenuItem value={location_row.LocationId} key = {i}>
+                            City:{location_row.City} - LocationId:{location_row.LocationId }
                         </MenuItem>
                         ))}
+                        <MenuItem value = {-1}> NULL </MenuItem>
+
                     </Select>
 
                     <TextField
                         variant="standard"
                         margin="normal"
                         required
+                        label = "Date/Time"
                         type="datetime-local"
-                        value = {moment(Event.Time).format('YYYY-MM-DD HH:mm:ss')}
+                        defaultValue= {moment(Event.Time).format('YYYY-MM-DD HH:mm:ss')}
                         onChange = {
                             e => {setEventTime(e.target.value)}}
                     />

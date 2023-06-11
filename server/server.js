@@ -152,7 +152,6 @@ app.delete('/events/:id',(req,res)=>{
 });
 
 app.post('/events', (req,res)=>{
-    console.log("post request made")
     const description = req.body.description;
     const date_time = req.body.date_time ;
     const cost = (req.body.cost) ;
@@ -171,20 +170,26 @@ app.post('/events', (req,res)=>{
     });
 });
 
-/*
- * PUT NOT FINISHED YET
-app.put('/events',(req,res)=>{
-    const description = req.body.description;
-    const date_time = req.body.date_time ;
-    const cost = (req.body.cost) ;
-    const location_id = req.body.location_id;
-    const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
-    let new_query = ` UPDATE Events SET Time='${final_datetime}',Description='${description}',Cost=${cost},Location=${location_id} WHERE Event.EventId = ${req.params.id}`
+
+app.put('/events/:id',(req,res)=>{
+    const EventId = req.params.id
+    const Description = req.body.Description;
+    const Time = req.body.Time;
+    const Cost = req.body.Cost
+
+    let LocationId = req.body.LocationId;
+    if (LocationId === -1){
+        LocationId = "NULL";
+    }
+    const new_query = ` UPDATE Events SET Time="${Time}",Description="${Description}",Cost=${Cost},LocationId=${LocationId} WHERE Events.EventId = ${EventId};`
+    console.log(new_query)
     db.query(new_query, function(err, results, fields){
-        console.log("success")
-    });
+        if(err){ res.status(400).send()}
+        else{
+            res.status(200).send();
+        }
+     });
 });
-*/
 
 
 /**********************Locations Controller ***************** */
@@ -231,11 +236,6 @@ app.delete('/locations/:id', (req,res) =>{
     })
 });
 
-/*app.put('/locations/:id', (req,res) =>{
-    db.pool.query(query,(err, results) => {
-        res.json(results);
-    })
-});*/
 
 /**********************EventsCategories Controller ***************** */
 app.get('/eventscategories', (req,res) =>{
@@ -247,7 +247,6 @@ app.get('/eventscategories', (req,res) =>{
     db.query(query,(err, results) => {
         if (!err){
             res.json(results);
-            console.log(results);
         }
         else{
             console.log(err);
@@ -259,10 +258,14 @@ app.post('/eventscategories', (req,res) =>{
     const EventId = req.body.EventId;
     const CategoryId = req.body.CategoryId;
     const query = `INSERT INTO EventCategories (EventCategories.EventId,EventCategories.CategoryId) VALUES(${EventId},${CategoryId});`
-    db.pool.query(query,(err, results) => {
-        if(!err)
+    db.query(query,(err, results) => {
+        if(!err){
             res.status(201).send()
-        else { res.status(500).send()}
+            //console.log(results)
+        }else {
+            res.status(500).send()
+           // console.log(err)
+        }
     })
 });
 
@@ -277,11 +280,6 @@ app.delete('/eventscategories/:eventid/:categoryid', (req,res) =>{
     })
 })
 
-/*app.put('/eventscategories/:eventid/:categoryid', (req,res) =>{
-    const query =
-    db.pool.query(query,(err, results) => {
-    })
-});*/
 
 // Send routing back to react app (must be after all other routes)
 app.use((req, res, next) => {

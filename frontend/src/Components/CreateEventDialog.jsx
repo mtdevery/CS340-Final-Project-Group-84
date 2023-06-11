@@ -11,7 +11,6 @@ export default function CreateEventDialog ({open, handleClose, data}) {
     const [date_time,setDatetime] = React.useState("");
     const [location_id, setLocation] = React.useState("");
     const [cost,setCost] = React.useState(0);
-  
     const AddEvent = async () =>
     {
       const newEvent = {description, date_time, location_id, cost} ;
@@ -76,10 +75,10 @@ export default function CreateEventDialog ({open, handleClose, data}) {
               defaultValue={""}
               onChange={(e)=>{setLocation(e.target.value)}}
             >
-              {data.map((event_row,i) => 
-                <MenuItem value = {event_row.LocationId}>
-                  {event_row.City}  
-                </MenuItem>)} 
+              {data.map((event_row,i) =>
+                <MenuItem key = {i} value = {event_row.LocationId}>
+                  {event_row.City}
+                </MenuItem>)}
             </Select>
           </FormControl>
 

@@ -69,8 +69,8 @@ export default function CreateUserEventDialog (props) {
               label="Location"
               onChange={e => setUserId(e.target.value)}
             >
-                {users.map((item) => (
-                  <MenuItem value={item.UserId}>{item.Name}</MenuItem>
+                {users.map((item,i) => (
+                  <MenuItem key = {i} value={item.UserId}>{item.Name}</MenuItem>
                 ))}
             </Select>
           </FormControl>
@@ -87,8 +87,8 @@ export default function CreateUserEventDialog (props) {
               label="Location"
               onChange={e => setEventId(e.target.value)}
             >
-                {events.map((item) => (
-                  <MenuItem value={item.EventId}>{item.Description}</MenuItem>
+                {events.map((item,i) => (
+                  <MenuItem key = {i} value={item.EventId}>{item.Description}</MenuItem>
                 ))}
             </Select>
           </FormControl>

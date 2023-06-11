@@ -8,15 +8,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button, FormControl, InputLabel, Select, MenuItem, } from '@mui/material';
 
 export default function CreateEventCategoryDialog (props) {
-    const {open, onClose} = props;
+    const {open, handleClose, CategoriesData,EventsData} = props;
 
     const [EventId,setEventId] = useState('');
     const [CategoryId,setCategoryId] = useState('');
-    const [EventsCategoriesData,setEVData] = useState([]); // for later making POST
+    const [EventsCategoriesData,setEVData] = useState([]); 
 
     const createEventCategory = async () =>
     {
-      const newEventCategory = {EventId,CategoryId}
+      const newEventCategory = {EventId:EventId,CategoryId:CategoryId}
       const response = await fetch('/eventscategories',{
         method: 'POST',
         body: JSON.stringify(newEventCategory),
@@ -24,16 +24,13 @@ export default function CreateEventCategoryDialog (props) {
       });
       if (response.status == 201){
         alert("New Event Category Created");
-        handleClose();
+        closeEVC();
       } else{
         console.log("Event Category creation failed ");
       }
     }
 
-    const handleClose = () => {
-      onClose();
-    };
-
+    const closeEVC = () => handleClose();
 
     return(
         <Dialog open={open} onClose={handleClose}>
@@ -51,12 +48,13 @@ export default function CreateEventCategoryDialog (props) {
               margin="dense"
               variant="standard"
               label="Event"
+              defaultValue={""}
+              onChange = {e=>setEventId(e.target.value)}
             >
-                <MenuItem value={'Bridal Party for Abbie'}>Bridal Party for Abbie</MenuItem>
-                <MenuItem value={'Rolling Stones Concert'}>Rolling Stones Concert</MenuItem>
-                <MenuItem value={'Sunset Film Festival'}>Sunset Film Festival</MenuItem>
-                <MenuItem value={'Live Band Karaoke'}>Live Band Karaoke</MenuItem>
-                <MenuItem value={"Abbie's Wedding"}>Abbie's Wedding</MenuItem>
+               {EventsData.map((event_row,i) =>
+                <MenuItem key = {i} value = {event_row.EventId}>
+                  {event_row.EventId} - {event_row.Description}
+                </MenuItem>)}
             </Select>
           </FormControl>
           <FormControl
@@ -68,18 +66,19 @@ export default function CreateEventCategoryDialog (props) {
               margin="dense"
               variant="standard"
               label="Category"
+              defaultValue={""}
+              onChange={e=>setCategoryId(e.target.value)}
             >
-                <MenuItem value={'Indoor'}>Indoor</MenuItem>
-                <MenuItem value={'Tournament'}>Chess</MenuItem>
-                <MenuItem value={'Wedding'}>Wedding</MenuItem>
-                <MenuItem value={'Concert'}>Concert</MenuItem>
-                <MenuItem value={'Outdoor'}>Outdoor</MenuItem>
+              {CategoriesData.map((category,i) =>
+                <MenuItem key = {i} value = {category.CategoryId}>
+                  {category.CategoryId} - {category.Description}
+                </MenuItem>)}
             </Select>
           </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={createEventCategory}>Submit</Button>
         </DialogActions>
       </Dialog>
     );

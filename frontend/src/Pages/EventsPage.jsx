@@ -19,7 +19,6 @@ function EventsPage(){
     const [location_list, setLocationList] = useState([]);
     const [editOpen,seteditOpen] = useState(false);
     const [editEvent,seteditEvent] = useState('');
-    
     const handleEditOpen = (EventRow) =>{
         //console.log(EventRow)
         seteditOpen(true);
@@ -40,7 +39,6 @@ function EventsPage(){
         setLocationList(location_list);
     };
 
-   
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -113,7 +111,7 @@ function EventsPage(){
                                 <TableCell>{row.Time}</TableCell>
                                 <TableCell>{row.Description}</TableCell>
                                 <TableCell>{row.Cost}</TableCell>
-                                <TableCell>{row.LocationId}</TableCell>
+                                <TableCell>{row.LocationId || "NULL" }</TableCell>
                                 <TableCell><Button onClick={()=>{handleEditOpen(row)}} startIcon={<Edit />}></Button></TableCell>
                                 <TableCell><Button onClick={()=> handleDelete(row.EventId)} startIcon={<Delete color='error' />}></Button></TableCell>
                             </TableRow>
