@@ -100,7 +100,7 @@ Values ("2023-08-18 1:00:00", "Bridal Party for Abbie", 17.93, 1),
 ("2023-02-06 06:06:00", "Live Band Karaoke", 39.73, 2),
 ("2023-11-08 08:00:00", "Abbie's Wedding", 2.60, 1);
 
-
+-- sample inserts used to link a single user to multiple events 
 INSERT INTO `UserEvents`(`UserId`, `EventId`) VALUES
 (1, 1),
 (1, 5),
@@ -108,20 +108,14 @@ INSERT INTO `UserEvents`(`UserId`, `EventId`) VALUES
 (4, 3),
 (2, 3);
 
+-- sample inserts that demonstrate linking a single event to multiple categories
 INSERT INTO `EventCategories`(`EventId`,`CategoryId`) VALUES
 (2,5),
 (2,7),
 (5,4);
 
--- example lookup for list users that will attend an event given an EventId is known
--- SELECT Users.Name,Events.Description FROM (Users INNER JOIN UserEvents on Users.UserId = UserEvents.UserId) INNER JOIN Events on Events.EventId = UserEvents.EventId ;
 
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
-
-/*
-SET FOREIGN_KEY_CHECKS=0;
-DROP TABLES Categories,Events,EventCategories,Users,UserEvents,Locations ;
-*/
 
 
