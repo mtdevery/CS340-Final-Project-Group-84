@@ -165,7 +165,7 @@ app.post('/events', (req,res)=>{
     const date_time = req.body.date_time;
     const cost = (req.body.cost);
     let location_id = req.body.location_id;
-    if (location_id === undefined || location_id === "" || location_id === -1 ){
+    if (location_id === undefined || location_id === "" || location_id === -1){
         location_id = 'NULL';
     }
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');

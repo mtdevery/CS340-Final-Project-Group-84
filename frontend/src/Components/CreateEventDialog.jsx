@@ -83,7 +83,7 @@ export default function CreateEventDialog ({open, handleClose, data}) {
                 <MenuItem key = {i} value = {event_row.LocationId}>
                   {event_row.City}
                 </MenuItem>)}
-                <MenuItem value ={-1}> NULL </MenuItem>
+                <MenuItem value ={-1} > NULL </MenuItem> 
             </Select>
           </FormControl>
 
