@@ -5,9 +5,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const db = require('./db-connector');
-const moment = require('moment'); // date parser/converter
-const cors = require('cors') ; // allows request when requests are made from hostname!= flip/localhost
-
+const moment = require('moment'); 
+const cors = require('cors') ; 
 //Middleware
 app.use(express.json())
 app.use(bodyParser.json())
@@ -166,7 +165,7 @@ app.post('/events', (req,res)=>{
     const date_time = req.body.date_time;
     const cost = (req.body.cost);
     let location_id = req.body.location_id;
-    if (location_id === undefined || location_id === ""){
+    if (location_id === undefined || location_id === "" || location_id === -1 ){
         location_id = 'NULL';
     }
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
@@ -205,7 +204,7 @@ app.put('/events/:id',(req,res)=>{
 });
 
 
-/**********************Locations Controller ***************** */
+/**********************Locations Controller ******************/
 app.get('/api/locations', (req,res) =>{
     const query = "SELECT * FROM Locations ORDER BY City ASC;";
     db.pool.query(query,(err, results) =>

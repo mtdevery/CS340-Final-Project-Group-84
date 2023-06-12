@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function CreateEventDialog ({open, handleClose, data}) {
+    /** Local JS variables for storing dialog choices that the Express Server will receive */
     const [description,setDescription] = React.useState("");
     const [date_time,setDatetime] = React.useState("");
     const [location_id, setLocation] = React.useState("");
@@ -15,7 +16,6 @@ export default function CreateEventDialog ({open, handleClose, data}) {
     const AddEvent = async () =>
     {
       const newEvent = {description, date_time, location_id, cost} ;
-      //console.log(`NEW EVENT Location ID ${location_id}`) ; 
       const response = await fetch("/events",{
         method: "POST",
         body: JSON.stringify(newEvent),
@@ -83,6 +83,7 @@ export default function CreateEventDialog ({open, handleClose, data}) {
                 <MenuItem key = {i} value = {event_row.LocationId}>
                   {event_row.City}
                 </MenuItem>)}
+                <MenuItem value ={-1}> NULL </MenuItem>
             </Select>
           </FormControl>
 

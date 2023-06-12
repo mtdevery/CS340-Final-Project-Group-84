@@ -10,8 +10,8 @@ import Button from '@mui/material/Button';
 import CreateCategoryDialog from '../Components/CreateCategoryDialog';
 
 function CategoriesPage(){
-    const [open, setOpen] = React.useState(false);
-    const [categories, setCategories] = React.useState([]);
+    const [open, setOpen] = React.useState(false); 
+    const [categories, setCategories] = React.useState([]); 
 
     const handleClickOpen = () => {
         setOpen(true);
