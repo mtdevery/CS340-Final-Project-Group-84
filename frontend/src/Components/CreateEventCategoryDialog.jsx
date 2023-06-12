@@ -22,7 +22,7 @@ export default function CreateEventCategoryDialog (props) {
         body: JSON.stringify(newEventCategory),
         headers: {'Content-Type': 'application/json',}
       });
-      if (response.status == 201){
+      if (response.status === 201){
         alert("New Event Category Created");
         closeEVC();
       } else{
