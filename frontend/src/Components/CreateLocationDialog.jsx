@@ -23,6 +23,9 @@ export default function CreateLocationDialog ({open, handleClose}) {
       if (response.status === 201){
         alert("Successful creation of entity");
         handleClose();
+      } else {
+        const errorResponse = await response.json();
+        alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     }
 

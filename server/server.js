@@ -28,7 +28,7 @@ app.get('/api/userevents', (req, res) => {
                     ORDER BY UserEvents.UserId ASC;`;
     db.pool.query(query1, function(err, results, fields){
         if(err){
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }else{
             res.send(JSON.stringify(results));
         }
@@ -41,7 +41,7 @@ app.post('/api/userevents', (req, res) => {
     let query1 = `INSERT INTO UserEvents (UserId, EventId) VALUES (${newValue.UserId}, ${newValue.EventId});`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else {
             res.status(201).send();
@@ -57,7 +57,7 @@ app.put('/api/userevents/:userid/:eventid', (req, res) => {
     let query1 = `UPDATE UserEvents SET UserId = ${newValue.UserId}, EventId = ${newValue.EventId} WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else {
             res.status(201).send();
@@ -72,7 +72,7 @@ app.delete('/api/userevents/:userid/:eventid', (req, res) => {
     let query1 = `DELETE FROM UserEvents WHERE UserId = ${oldUserId} AND EventId = ${oldEventId};`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else {
             res.status(204).send();
@@ -86,7 +86,7 @@ app.get('/api/users', (req, res) => {
     let query1 = 'SELECT * FROM Users ORDER BY Name ASC;';
     db.pool.query(query1, function(err, results, fields){
         if(err){
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }else{
             res.send(JSON.stringify(results));
         }
@@ -99,7 +99,7 @@ app.post('/api/users', (req, res) => {
     let query1 = `INSERT INTO Users (Name, Email) VALUES ('${newValue.Name}', '${newValue.Email}');`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else {
             res.status(201).send();
@@ -113,7 +113,7 @@ app.get('/api/categories', (req, res) => {
     let query1 = 'SELECT * FROM Categories;';
     db.pool.query(query1, function(err, results, fields){
         if(err){
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }else{
             res.send(JSON.stringify(results));
         }
@@ -126,7 +126,7 @@ app.post('/api/categories', (req, res) => {
     let query1 = `INSERT INTO Categories (CategoryName, Description) VALUES ('${newValue.CategoryName}', '${newValue.Description}');`;
     db.pool.query(query1, function(err, results, fields){
         if (err) {
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else {
             res.status(201).send();
@@ -152,7 +152,7 @@ app.delete('/events/:id',(req,res)=>{
     db.pool.query(query,(err,results,fields) =>{
         if(err){
             console.log(`Unable to perform delete ERROR:${err}`);
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else{
             console.log("successfully removed event") ;
@@ -165,9 +165,12 @@ app.post('/events', (req,res)=>{
     const description = req.body.description;
     const date_time = req.body.date_time;
     const cost = (req.body.cost);
-    const location_id = req.body.location_id;
+    let location_id = req.body.location_id;
+    if (location_id === undefined || location_id === ""){
+        location_id = 'NULL';
+    }
     const final_datetime = moment(date_time).format('YYYY-MM-DD HH:mm:ss');
-    let new_query = `INSERT INTO Events(Time,Description,Cost,LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
+    let new_query = `INSERT INTO Events(Time, Description, Cost, LocationId) VALUES ('${final_datetime}',"${description}",${cost},${location_id});`
     db.pool.query(new_query, function(err, results, fields){
         if(!err){
             console.log(`Sucessful Query SQL Syntax Used: ${new_query}`);
@@ -175,7 +178,7 @@ app.post('/events', (req,res)=>{
         }
         else{
             console.log(`Entity Creation Query Failed ERROR:${err}`);
-            res.status(500);
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
     });
 });
@@ -194,7 +197,7 @@ app.put('/events/:id',(req,res)=>{
     const new_query = `UPDATE Events SET Time="${Time}",Description="${Description}",Cost=${Cost},LocationId=${LocationId} WHERE Events.EventId = ${EventId};`
     console.log(new_query)
     db.pool.query(new_query, function(err, results, fields){
-        if(err){ res.status(400).send()}
+        if(err){ res.status(400).send(JSON.stringify({message: err.message}))}
         else{
             res.status(200).send();
         }
@@ -208,7 +211,7 @@ app.get('/api/locations', (req,res) =>{
     db.pool.query(query,(err, results) =>
     {
         if(err){
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
         else{
             res.status(200).send(JSON.stringify(results));
@@ -225,7 +228,7 @@ app.post('/locations', (req,res) =>{
     db.pool.query(query,(err, results) =>
     {
         if(err){
-            res.status(500).send();
+            res.status(500).send(JSON.stringify({message: err.message}));
         }else{
             res.status(201).send();
         }
@@ -246,6 +249,7 @@ app.get('/eventscategories', (req,res) =>{
         }
         else{
             console.log(err);
+            res.status(500).send(JSON.stringify({message: err.message}));
         }
     })
 });
@@ -259,7 +263,7 @@ app.post('/eventscategories', (req,res) =>{
             res.status(201).send()
             //console.log(results)
         }else{
-            res.status(500).send()
+            res.status(500).send(JSON.stringify({message: err.message}))
            // console.log(err)
     }});
 });
