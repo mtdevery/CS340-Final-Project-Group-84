@@ -12,36 +12,43 @@ import EditUserEventDialog from '../Components/EditUserEventDialog';
 import { Edit, Delete } from '@mui/icons-material/';
 
 function UserEventsPage(){
+    // Define useState hooks to handle opening dialogs and setting the displayed data
     const [open, setOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
     const [userEvents, setUserEvents] = React.useState([]);
     const [selectedItem, setSelectedItem] = React.useState();
 
+    // Open CREATE Dialog
     const handleCreateClickOpen = () => {
         setOpen(true);
     };
 
+    // Close CREATE Dialog and reload data
     const handleCreateClose = () => {
         setOpen(false);
         loadAllUserEvents();
     };
 
+    // Open UPDATE Dialog
     const handleEditClickOpen = (userEvent) => {
         setSelectedItem(userEvent);
         setEditOpen(true);
     }
 
+    // Close UPDATE Dialog and reload data
     const handleEditClose = () => {
         setEditOpen(false);
         loadAllUserEvents();
     };
 
+    // Function to RETRIEVE all user events from the server with fetch
     const loadAllUserEvents = async () => {
         const response = await fetch('/api/userevents');
         const userEvents = await response.json();
         setUserEvents(userEvents);
     };
 
+    // Function to DELETE a user event with fetch to the server api
     const handleDelete = async (userEvent) => {
         const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, { 
             method: 'DELETE'
@@ -55,6 +62,7 @@ function UserEventsPage(){
         }
     };
 
+    // UseEffect hook loads all user events on page load
     React.useEffect(() => {
         loadAllUserEvents();
     }, []);

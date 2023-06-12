@@ -7,12 +7,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 export default function CreateUserEventDialog (props) {
+    // Assign variables to passed in parameters
     const {open, onClose, userEvent} = props;
+
+    // Define useState hooks to handle opening dialogs and setting the displayed data
     const [userId, setUserId] = React.useState('');
     const [eventId, setEventId] = React.useState('');
     const [users, setUsers] = React.useState([]);
     const [events, setEvents] = React.useState([]);
 
+    // Function to UPDATE a user event using a fetch call to the server api
     const editUserEvent = async () => {
       const newUserEvent = { UserId: userId, EventId: eventId };
       const response = await fetch(`/api/userevents/${userEvent.UserId}/${userEvent.EventId}`, {
@@ -31,6 +35,7 @@ export default function CreateUserEventDialog (props) {
       }
     };
 
+    // Function to load in user and event data to populate the dynamic Select dropdown
     const loadData = async () => {
       const userResponse = await fetch('/api/users/');
       const usersData = await userResponse.json();
@@ -41,10 +46,12 @@ export default function CreateUserEventDialog (props) {
       setEvents(eventData);
     };
 
+    // Function to close the dialog
     const handleClose = () => {
       onClose();
     };
 
+    // Set the selected user event passed in as a parameter from the main page
     React.useEffect(() => {
       if(userEvent !== undefined){
         setUserId(userEvent.UserId);
@@ -52,6 +59,7 @@ export default function CreateUserEventDialog (props) {
       }
     },[userEvent]);
 
+    // Dynamically populate Select dropdown data using useEffect hook on page load
     React.useEffect(() => {
       loadData();
     }, []);
