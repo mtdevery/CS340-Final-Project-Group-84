@@ -10,24 +10,29 @@ import Button from '@mui/material/Button';
 import CreateUserDialog from '../Components/CreateUserDialog';
 
 function UsersPage(){
+    // Define useState hooks to handle opening dialogs and setting the displayed data
     const [open, setOpen] = React.useState(false);
     const [users, setUsers] = React.useState([]);
 
+    // Open CREATE Dialog
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    // Close CREATE Dialog and reload data
     const handleClose = () => {
         setOpen(false);
         loadAllUsers();
     };
 
+    // Function to RETRIEVE all users from the server with fetch
     const loadAllUsers = async () => {
         const response = await fetch('/api/users');
         const usersData = await response.json();
         setUsers(usersData);
     };
 
+    // UseEffect hook loads all user events on page load
     React.useEffect(() => {
         loadAllUsers();
     }, []);

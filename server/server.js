@@ -16,8 +16,12 @@ app.use(cors())
 app.use(express.urlencoded({extended: true}))
 
 // Serve static react app
+// Source for this method based on:
+// Source URL: https://create-react-app.dev/docs/deployment/
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
+// All code from this file is adapted from the CS340 Node Starter App:
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 /******************** UserEvents Controller/API ********************/
 // Retrieve all user events
 app.get('/api/userevents', (req, res) => {
