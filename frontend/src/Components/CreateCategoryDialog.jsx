@@ -7,11 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button } from '@mui/material';
 
 export default function CreateCategoryDialog (props) {
+    // Assign variables to passed in parameters
     const {open, onClose} = props;
 
+    // Define useState hooks to handle creating the category object from the form
     const [categoryName, setCategoryName] = React.useState('');
     const [description, setDescription] = React.useState('');
 
+    // Function to CREATE a user using a fetch call to the server api
     const createCategory = async () => {
       const newCategory = { CategoryName: categoryName, Description: description };
       const response = await fetch('/api/categories', {
@@ -29,7 +32,8 @@ export default function CreateCategoryDialog (props) {
           alert(`Category not added. Please check that all required fields are entered. Status code = ${response.status}, message = ${errorResponse.message}`);
       }
     };
-
+    
+    // Function to close the dialog
     const handleClose = () => {
       onClose();
     };

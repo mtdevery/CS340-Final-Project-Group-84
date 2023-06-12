@@ -10,24 +10,29 @@ import Button from '@mui/material/Button';
 import CreateCategoryDialog from '../Components/CreateCategoryDialog';
 
 function CategoriesPage(){
+    // Define useState hooks to handle opening dialogs and setting the displayed data
     const [open, setOpen] = React.useState(false);
     const [categories, setCategories] = React.useState([]);
 
+    // Open CREATE Dialog
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    // Close CREATE Dialog and reload data
     const handleClose = () => {
         setOpen(false);
         loadAllCategories();
     };
 
+    // Function to RETRIEVE all users from the server with fetch
     const loadAllCategories = async () => {
         const response = await fetch('/api/categories');
         const categoriesData = await response.json();
         setCategories(categoriesData);
     };
 
+    // UseEffect hook loads all user events on page load
     React.useEffect(() => {
         loadAllCategories();
     }, []);

@@ -7,11 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button } from '@mui/material';
 
 export default function CreateUserDialog (props) {
+    // Assign variables to passed in parameters
     const {open, onClose} = props;
 
+    // Define useState hooks to handle creating the user object from the form
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
 
+    // Function to CREATE a user using a fetch call to the server api
     const createUser = async () => {
       const newUser = { Name: name, Email: email };
       const response = await fetch('api/users', {
@@ -30,6 +33,7 @@ export default function CreateUserDialog (props) {
       }
     };
 
+    // Function to close the dialog
     const handleClose = () => {
       onClose();
     };
